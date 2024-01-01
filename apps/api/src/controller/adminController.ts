@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "models";
 export const getAdmins = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ) => {

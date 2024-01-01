@@ -84,7 +84,7 @@ export const approveTask = async (
   }
 };
 
-export const startTask = async (
+export const progressTask = async (
   req: Request,
   res: Response,
   next: NextFunction,

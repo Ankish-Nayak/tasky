@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { User } from "models";
 import { loginTypes, signupTypes } from "types";
 import { secret } from "..";
+import { refreshLoginSession } from "../helpers/removeExpiryToken";
 export const login = async (
   req: Request,
   res: Response,
@@ -56,7 +57,34 @@ export const signup = async (
         username,
         password,
       });
-      res.json({ message: "User created", username: newUser.username });
+      res.json({ message: "user created", username: newUser.username });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.headers.userId;
+  try {
+    const existingUser = await User.findById(userId);
+    if (existingUser) {
+      const cookies = new Cookies(req, res);
+      const token = cookies.get("token") as string;
+      existingUser.loginSessions = await refreshLoginSession(
+        token,
+        secret,
+        existingUser.loginSessions,
+      );
+      await existingUser.save();
+      cookies.set("token", null);
+      res.json({ message: "user logged out" });
+    } else {
+      res.status(400).json({ message: "user not found" });
     }
   } catch (e) {
     next(e);

@@ -1,10 +1,9 @@
 import express from "express";
-import { authenticateJWT } from "../middlewares/auth";
 import * as commonController from "../controller/commonControllers";
-import * as adminController from "../controller/adminController";
 import * as emloyeeController from "../controller/employeeController";
+import { authenticateJWT } from "../middlewares/auth";
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get("/login", commonController.login);
 
@@ -13,3 +12,5 @@ router.post("/signup", commonController.signup);
 router.get("/", authenticateJWT, emloyeeController.getEmployees);
 
 router.get("/:userId", authenticateJWT, emloyeeController.getEmployees);
+
+router.put("/logout", authenticateJWT, commonController.logout);

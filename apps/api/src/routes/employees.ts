@@ -1,12 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
-import { Task, User } from "models";
+import { User } from "models";
 import * as commonController from "../controller/commonControllers";
 import { authenticateJWT } from "../middlewares/auth";
-const router = express.Router();
+export const router = express.Router();
 
 router.get("/login", commonController.login);
 
 router.post("/signup", commonController.signup);
+
+router.put("/logout", commonController.logout);
 
 router.get(
   "/",

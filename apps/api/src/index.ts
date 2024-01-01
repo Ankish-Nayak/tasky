@@ -1,5 +1,11 @@
 import express from "express";
 import { config } from "dotenv";
+import cors from "cors";
+import { router as adminRouter } from "./routes/admins";
+import { router as employeeRouter } from "./routes/employees";
+import { router as taskRouter } from "./routes/tasks";
+import errorHandler from "./middlewares/errorHandler";
+import { run as connectToDb } from "models";
 
 config();
 const app = express();
@@ -10,6 +16,30 @@ if (process.env.SECRET === undefined) {
 
 export const secret: string = process.env.SECRET;
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`live at ${process.env.PORT || 3000}`);
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  }),
+);
+
+app.use(express.urlencoded());
+app.use(express.json());
+
+app.use("/employees", employeeRouter);
+app.use("/admins", adminRouter);
+app.use("/tasks", taskRouter);
+
+app.use((req, res) => {
+  console.log("not hit", req.originalUrl);
+  res.status(404).send("404 -Not Found");
 });
+app.use(errorHandler);
+
+connectToDb()
+  .then(() => {
+    app.listen(process.env.PORT || 3000, () => {
+      console.log("live at ", `http://localhost:${process.env.PORT || 3000}`);
+    });
+  })
+  .catch((e) => console.log(e));
