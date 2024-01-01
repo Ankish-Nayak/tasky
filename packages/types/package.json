@@ -1,0 +1,14 @@
+{
+  "name": "types",
+  "version": "1.0.0",
+  "description": "zod Validation types for frontend and backend.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ankish Nayak",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
