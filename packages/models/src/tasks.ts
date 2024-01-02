@@ -11,10 +11,10 @@ export interface ITask {
 }
 
 export const task = new Schema<ITask>({
-  title: { type: Schema.Types.String, required: true },
+  title: { type: Schema.Types.String, required: true, unique: true },
   description: { type: Schema.Types.String, required: true },
-  assignedBy: { type: Schema.Types.ObjectId, required: true },
-  assignedTo: { type: Schema.Types.ObjectId, required: true },
+  assignedBy: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+  assignedTo: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   status: {
     type: Schema.Types.String,
     enum: ["pending", "progress", "done", "approved"],

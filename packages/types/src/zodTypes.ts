@@ -12,8 +12,8 @@ export const signupTypes = z.object({
 });
 
 export const createTaskTypes = z.object({
-  title: z.string().min(5),
-  description: z.string().min(10),
+  title: z.string().min(4),
+  description: z.string().min(4),
   assignedTo: z.string().min(1),
 });
 
