@@ -10,6 +10,7 @@ export const authenticateJWT = async (
   const cookies = new Cookies(req, res);
 
   const token = cookies.get("token");
+  console.log(token);
   if (typeof token === "string") {
     jwt.verify(token, secret, (err, payload) => {
       if (err) {
@@ -24,6 +25,7 @@ export const authenticateJWT = async (
       req.headers["userId"] = payload.userId;
       next();
     });
+  } else {
+    res.status(401).json({ message: "failed authentication" });
   }
-  res.status(401).json({ message: "failed authentication" });
 };

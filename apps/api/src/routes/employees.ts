@@ -1,50 +1,18 @@
 import express, { NextFunction, Request, Response } from "express";
 import { User } from "models";
 import * as commonController from "../controller/commonControllers";
+import * as employeeController from "../controller/employeeController";
 import { authenticateJWT } from "../middlewares/auth";
 export const router = express.Router();
 
-router.get("/login", commonController.login);
+router.get("/me", authenticateJWT, commonController.me);
 
-router.post("/signup", commonController.signup);
+router.put("/login", commonController.login);
 
-router.put("/logout", commonController.logout);
+router.post("/signup", employeeController.signup);
 
-router.get(
-  "/",
-  authenticateJWT,
-  async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-      const users = await User.find({ role: "employee" });
-      const newUsers = users.map((user) => {
-        const { password: _, ...newUser } = user;
-        return newUser;
-      });
-      res.json({ newUsers });
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+router.put("/logout", authenticateJWT, commonController.logout);
 
-router.get(
-  "/:userId",
-  authenticateJWT,
-  async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.userId;
-    try {
-      const user = await User.findOne({
-        role: "employee",
-        _id: userId,
-      });
-      if (user) {
-        const { password: _, ...newUser } = user;
-        res.json({ newUser });
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+router.get("/", authenticateJWT, employeeController.getEmployees);
+
+router.get("/:userId", authenticateJWT, employeeController.getEmployee);

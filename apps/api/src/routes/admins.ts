@@ -1,16 +1,18 @@
 import express from "express";
 import * as commonController from "../controller/commonControllers";
-import * as emloyeeController from "../controller/employeeController";
 import { authenticateJWT } from "../middlewares/auth";
+import * as adminController from "../controller/adminController";
 
 export const router = express.Router();
 
-router.get("/login", commonController.login);
+router.get("/me", authenticateJWT, commonController.me);
 
-router.post("/signup", commonController.signup);
+router.put("/login", commonController.login);
+
+router.post("/signup", adminController.signup);
 // get all the employee
-router.get("/", authenticateJWT, emloyeeController.getEmployees);
+router.get("/", authenticateJWT, adminController.getAdmins);
 
-router.get("/:userId", authenticateJWT, emloyeeController.getEmployees);
+router.get("/:userId", authenticateJWT, adminController.getAdmin);
 
 router.put("/logout", authenticateJWT, commonController.logout);

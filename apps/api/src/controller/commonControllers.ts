@@ -2,9 +2,10 @@ import Cookies from "cookies";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "models";
-import { loginTypes, signupTypes } from "types";
+import { loginTypes } from "types";
 import { secret } from "..";
 import { refreshLoginSession } from "../helpers/removeExpiryToken";
+
 export const login = async (
   req: Request,
   res: Response,
@@ -21,43 +22,16 @@ export const login = async (
       const token = jwt.sign(
         {
           userId: existingUser._id,
-          role: "employee",
+          role: existingUser.role,
         },
         secret,
+        { expiresIn: "4h" },
       );
       const cookies = new Cookies(req, res);
       cookies.set("token", token);
       res.json({ message: "User loggedId" });
     } else {
       res.status(402).json({ message: "User not found" });
-    }
-  } catch (e) {
-    next(e);
-  }
-};
-
-export const signup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const parsedInputs = signupTypes.parse(req.body);
-    const { firstname, lastname, username, password } = parsedInputs;
-
-    const existingUser = await User.findOne({
-      username,
-    });
-    if (existingUser) {
-      res.status(422).json({ message: "User already exists" });
-    } else {
-      const newUser = await User.create({
-        firstname,
-        lastname,
-        username,
-        password,
-      });
-      res.json({ message: "user created", username: newUser.username });
     }
   } catch (e) {
     next(e);
@@ -85,6 +59,29 @@ export const logout = async (
       res.json({ message: "user logged out" });
     } else {
       res.status(400).json({ message: "user not found" });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const me = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.headers.userId as string;
+  const role = req.headers.role as string;
+  try {
+    if (role === "employee" || role === "admin") {
+      const user = await User.findOne({
+        _id: userId,
+      });
+      if (user) {
+        res.json({
+          firstname: user.firstname,
+        });
+      } else {
+        res.status(404).json({ message: "user not found" });
+      }
+    } else {
+      res.status(400).json({ message: "invalid token" });
     }
   } catch (e) {
     next(e);

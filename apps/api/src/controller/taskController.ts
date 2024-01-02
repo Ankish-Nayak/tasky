@@ -1,19 +1,51 @@
-import { Request, Response, NextFunction } from "express";
-import { Task } from "models";
+import { NextFunction, Request, Response } from "express";
+import { Task, User } from "models";
+import { createTaskTypes } from "types";
 export const createTask = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const status = req.query.status;
+  console.log(req.body);
   const userId = req.headers.userId as string;
+  const role = req.headers.role as string;
+  if (role !== "admin") {
+    return res
+      .status(400)
+      .json({ message: "Admin can only create task and assign it." });
+  }
   try {
-    if (status === "pending" || "progress" || "done" || "aproved") {
-      const tasks = await Task.find({ assignedTo: userId, status });
-      res.json({ tasks });
+    const parsedInputs = createTaskTypes.parse(req.body);
+    const { title, description, assignedTo } = parsedInputs;
+    const existingUser = await User.findById(assignedTo);
+    if (existingUser) {
+      if (existingUser.role === "employee") {
+        const existingTitle = await Task.findOne({
+          title,
+        });
+        console.log("existingTask", existingTitle);
+        if (existingTitle) {
+          res.status(400).json({ message: "title is taken" });
+        } else {
+          const task = await Task.create({
+            title,
+            description,
+            assignedTo,
+            assignedBy: userId,
+          });
+          if (task) {
+            res.json({ message: "task has been created", task });
+          } else {
+            res.status(409).json({ messae: "failed to create task" });
+          }
+        }
+      } else {
+        res
+          .status(400)
+          .json({ message: "task can be assigned to employee only" });
+      }
     } else {
-      const tasks = await Task.find({ assignedTo: userId });
-      res.json({ tasks });
+      res.status(400).json({ message: "employee not found" });
     }
   } catch (e) {
     next(e);
@@ -153,7 +185,7 @@ export const doneTask = async (
 };
 
 export const getTasks = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ) => {
@@ -190,14 +222,14 @@ export const getTasksByAssignedToByEmployeeId = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const employeeId = req.headers.userId;
+  const assignedTo = req.query.assignedTo;
   const role = req.headers.role;
   if (role !== "employee") {
     res.status(400).json({ message: "employee only allowed" });
   }
   try {
     const tasks = await Task.find({
-      assignedTo: employeeId,
+      assignedTo,
     });
     res.json({ tasks });
   } catch (e) {
@@ -210,16 +242,34 @@ export const getTasksByAssignedByAdminId = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const adminId = req.headers.userId;
+  const assignedBy = req.query.assignedBy;
   const role = req.headers.role;
   if (role !== "admin") {
     res.status(400).json({ message: "admin only allowed" });
   }
   try {
     const tasks = await Task.find({
-      assignedBy: adminId,
+      assignedBy,
     });
     res.json({ tasks });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getTaskById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const taskId = req.params.taskId;
+  try {
+    const task = await Task.findById(taskId);
+    if (task) {
+      res.json({ task });
+    } else {
+      res.status(404).json({ message: "task not found" });
+    }
   } catch (e) {
     next(e);
   }
