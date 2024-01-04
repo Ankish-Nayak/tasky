@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -10,19 +10,16 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  @Input() setPageRender: () => void;
+  @Output() updatePageRender = new EventEmitter();
+
   loginFrom = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
   });
-  constructor(private authService: AuthService) {
-    this.setPageRender = () => {};
-  }
+  constructor(private authService: AuthService) {}
 
-  haveAccount() {
-    if (this.setPageRender) {
-      this.setPageRender();
-    }
+  setPageRender() {
+    this.updatePageRender.emit('signup');
   }
   login() {
     const { username, password } = this.loginFrom.value;

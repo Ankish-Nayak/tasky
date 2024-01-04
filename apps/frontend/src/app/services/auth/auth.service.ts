@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { loginParams, signupParams } from 'types';
 import { environment } from '../../../environments/environment.dev';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,29 +12,30 @@ export class AuthService {
 
   private isLoggedIn: boolean = false;
 
+  private _isLoggedInSource = new Subject<boolean>();
+  isLoggedInMessage$ = this._isLoggedInSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   getIsLoggedIn() {
     return this.isLoggedIn;
   }
 
-  me(): Promise<boolean> {
-    return new Promise<boolean>((res, rej) => {
-      this.http
-        .get(`${this.baseUrl}/users/me`, {
-          withCredentials: true,
-        })
-        .subscribe(
-          () => {
-            this.isLoggedIn = true;
-            res(true);
-          },
-          () => {
-            this.isLoggedIn = false;
-            rej(false);
-          },
-        );
-    });
+  me() {
+    this.http
+      .get(`${this.baseUrl}/users/me`, {
+        withCredentials: true,
+      })
+      .subscribe(
+        () => {
+          this.isLoggedIn = true;
+          this._isLoggedInSource.next(true);
+        },
+        () => {
+          this._isLoggedInSource.next(false);
+          this.isLoggedIn = false;
+        },
+      );
   }
 
   async open() {
@@ -62,34 +64,34 @@ export class AuthService {
         (res) => {
           console.log(res);
           this.isLoggedIn = true;
+          this._isLoggedInSource.next(true);
         },
         () => {
           this.isLoggedIn = false;
+          this._isLoggedInSource.next(false);
         },
       );
   }
 
   logout() {
-    return new Promise<boolean>((res, rej) => {
-      this.http
-        .put(
-          `${this.baseUrl}/users/logout`,
-          {},
-          {
-            withCredentials: true,
-          },
-        )
-        .subscribe(
-          () => {
-            this.isLoggedIn = false;
-            res(true);
-          },
-          () => {
-            this.isLoggedIn = false;
-            res(true);
-          },
-        );
-    });
+    this.http
+      .put(
+        `${this.baseUrl}/users/logout`,
+        {},
+        {
+          withCredentials: true,
+        },
+      )
+      .subscribe(
+        () => {
+          this.isLoggedIn = false;
+          this._isLoggedInSource.next(false);
+        },
+        () => {
+          this.isLoggedIn = false;
+          this._isLoggedInSource.next(false);
+        },
+      );
   }
 
   async signup(
@@ -117,9 +119,11 @@ export class AuthService {
         (res) => {
           console.log(res);
           this.isLoggedIn = true;
+          this._isLoggedInSource.next(true);
         },
         () => {
           this.isLoggedIn = false;
+          this._isLoggedInSource.next(false);
         },
       );
   }

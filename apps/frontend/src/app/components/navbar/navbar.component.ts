@@ -3,6 +3,7 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RootService } from '../../services/root/root.service';
 @Injectable()
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private rootService: RootService,
   ) {}
   navigateToLogin() {
     this.router.navigate(['/login']);
@@ -27,14 +29,22 @@ export class NavbarComponent implements OnInit {
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
-  async ngOnInit() {
-    this.isLoggedIn = await this.LoggedIn();
+  ngOnInit() {
+    this.LoggedIn();
+    this.authService.isLoggedInMessage$.subscribe((message) => {
+      if (message) {
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+      console.log('navbar', this.isLoggedIn);
+    });
   }
-  async LoggedIn() {
-    return await this.authService.me();
+  LoggedIn() {
+    this.authService.me();
   }
   async logout() {
-    this.isLoggedIn = await this.authService.logout();
+    this.authService.logout();
   }
   open() {
     this.authService.open();

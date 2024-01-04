@@ -29,13 +29,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = this.authService.getIsLoggedIn();
   }
-  setPageRender() {
-    if (this.pageRender === 'signup') {
-      this.pageRender = 'login';
-    } else {
-      this.pageRender = 'signup';
-    }
-    console.log('changed', this.pageRender);
-    this.cdr.detectChanges();
+  setPageRender(updatePageRender: string) {
+    this.pageRender = updatePageRender as 'signup' | 'login';
   }
 }

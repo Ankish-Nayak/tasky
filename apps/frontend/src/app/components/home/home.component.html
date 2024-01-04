@@ -6,9 +6,12 @@
     <div class="col-sm" id="homeRight">
       <app-login
         *ngIf="pageRender === 'login'"
-        [setPageRender]="setPageRender"
+        (updatePageRender)="setPageRender($event)"
       ></app-login>
-      <app-register *ngIf="pageRender === 'signup'"></app-register>
+      <app-register
+        *ngIf="pageRender === 'signup'"
+        (updatePageRender)="setPageRender($event)"
+      ></app-register>
     </div>
   </div>
 </div>
