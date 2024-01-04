@@ -1,0 +1,33 @@
+/* your-component.component.css */
+/* .pending { */
+/*   color: orange; */
+/* } */
+/**/
+/* .progress { */
+/*   color: yellow; */
+/* } */
+/**/
+/* .done { */
+/*   color: green; */
+/* } */
+/**/
+/* .approved { */
+/*   color: blue; */
+/* } */
+
+/* your-component.component.css */
+.pending {
+  color: #ff9800; /* Bootstrap primary text color */
+}
+
+.progress {
+  color: #8bc34a; /* Bootstrap success text color */
+}
+
+.done {
+  color: #007bff; /* Bootstrap info text color */
+}
+
+.approved {
+  color: #28a745; /* Bootstrap success text color */
+}

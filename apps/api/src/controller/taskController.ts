@@ -156,7 +156,7 @@ export const doneTask = async (
 ) => {
   const taskId = req.params.taskId as string;
   const role = req.headers.role as string;
-  if (role !== "admin") {
+  if (role !== "employee") {
     return res
       .status(400)
       .json({ message: "employee can only mark as done task" });

@@ -27,31 +27,45 @@ export class TaskComponent implements OnInit {
     console.log(this.role);
     this.task.createdAt = humanReadableDate(this.task.createdAt);
     this.authService.userMessage$.subscribe((message) => {
+      const { role } = message;
       this.role = message.role;
-      console.log('task', this.role);
+      if (role === 'admin') {
+        if (this.task.status === 'done') {
+          this.message = 'approve';
+        } else {
+          this.message = 'approved';
+        }
+      } else {
+        if (this.task.status === 'pending') {
+          this.message = 'start';
+        } else if (this.task.status === 'progress') {
+          this.message = 'done';
+        }
+      }
     });
   }
   isAdmin(): boolean {
     return this.role === 'admin';
   }
   getMessage(): string {
-    if (this.role === 'admin') {
-      if (this.task.status === 'pending') {
-        this.message = 'approve';
-      } else {
-        this.message = 'approved';
-      }
-    } else {
-      if (this.task.status === 'pending') {
-        this.message = 'start';
-      } else if (this.task.status === 'progress') {
-        this.message = 'done';
-      }
-    }
+    // if (this.role === 'admin') {
+    //   if (this.task.status === 'pending') {
+    //     this.message = 'approve';
+    //   } else {
+    //     this.message = 'approved';
+    //   }
+    // } else {
+    //   if (this.task.status === 'pending') {
+    //     this.message = 'start';
+    //   } else if (this.task.status === 'progress') {
+    //     this.message = 'done';
+    //   }
+    // }
     return this.message;
   }
 
   handleTask() {
+    console.log(this.message, this.role);
     switch (this.message) {
       case 'start': {
         this.start();
@@ -70,20 +84,40 @@ export class TaskComponent implements OnInit {
       }
     }
   }
-
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'pending':
+        return 'pending';
+      case 'progress':
+        return 'progress';
+      case 'done':
+        return 'done';
+      case 'approved':
+        return 'approved';
+      default:
+        return '';
+    }
+  }
   start() {
     if (this.role === 'employee') {
-      this.taskService.markAsProgress(this.task._id);
+      this.taskService.markAsProgress(this.task._id).subscribe((res) => {
+        this.message = 'done';
+        console.log(res);
+      });
     }
   }
   approve() {
     if (this.role === 'admin') {
-      this.taskService.markAsApproved(this.task._id);
+      this.taskService.markAsApproved(this.task._id).subscribe((res) => {
+        this.message = 'approved';
+      });
     }
   }
   done() {
     if (this.role === 'employee') {
-      this.taskService.markAsDone(this.task._id);
+      this.taskService.markAsDone(this.task._id).subscribe((res) => {
+        this.message = 'approve';
+      });
     } else {
       console.log('error');
     }

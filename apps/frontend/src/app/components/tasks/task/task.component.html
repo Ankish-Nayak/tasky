@@ -8,13 +8,15 @@
       <a href="#" class="card-link">{{ task.assignedBy }}</a>
     </p>
     <p class="card-text">AssignedOn: {{ task.createdAt }}</p>
-    <p class="card-text">Status: {{ task.status }}</p>
+    <p>
+      Status: <strong>{{ task.status }}</strong>
+    </p>
 
     <a
       href="#"
       class="btn btn-primary"
       *ngIf="isAdmin() && this.message !== 'approved'"
-      (click)="(handleTask)"
+      (click)="handleTask()"
       >{{ getMessage() }}</a
     >
 
@@ -22,7 +24,7 @@
       href="#"
       class="btn btn-primary disabled"
       *ngIf="isAdmin() && this.task.status === 'approved'"
-      (click)="(handleTask)"
+      (click)="handleTask()"
       >{{ getMessage() }}</a
     >
 
@@ -30,7 +32,7 @@
       href="#"
       class="btn btn-primary"
       *ngIf="!isAdmin()"
-      (click)="(handleTask)"
+      (click)="handleTask()"
       >{{ getMessage() }}</a
     >
     <!-- <app-admin-bottom-buttons *ngIf="isAdmin()"></app-admin-bottom-buttons> -->

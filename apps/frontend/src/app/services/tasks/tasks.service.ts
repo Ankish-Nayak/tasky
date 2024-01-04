@@ -56,60 +56,40 @@ export class TasksService {
     );
   }
   markAsApproved(taskId: string) {
-    this.http
-      .put<{ id: string }>(
-        `${this.baseUrl}/${taskId}/mask-as-approved`,
-        {},
-        {
-          withCredentials: true,
-        },
-      )
-      .subscribe((res) => {
-        console.log(res.id);
-      });
+    return this.http.put<{ id: string }>(
+      `${this.baseUrl}/${taskId}/mark-as-approved`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
   markAsDone(taskId: string) {
-    this.http
-      .put<{ id: string }>(
-        `${this.baseUrl}/${taskId}/mask-as-done`,
-        {},
-        {
-          withCredentials: true,
-        },
-      )
-      .subscribe((res) => {
-        console.log(res.id);
-      });
+    return this.http.put<{ id: string }>(
+      `${this.baseUrl}/${taskId}/mark-as-done`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
   markAsProgress(taskId: string) {
-    this.http
-      .put<{ id: string }>(
-        `${this.baseUrl}/${taskId}/mask-as-progress`,
-        {},
-        {
-          withCredentials: true,
-        },
-      )
-      .subscribe((res) => {
-        console.log(res.id);
-      });
+    return this.http.put<{ id: string }>(
+      `${this.baseUrl}/${taskId}/mark-as-progress`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
   getTask(taskId: string) {
-    this.http
-      .get<ITask>(`${this.baseUrl}/${taskId}`, {
-        withCredentials: true,
-      })
-      .subscribe((res) => {
-        console.log(res);
-      });
+    return this.http.get<ITask>(`${this.baseUrl}/${taskId}`, {
+      withCredentials: true,
+    });
   }
   deleteTask(taskId: string) {
-    this.http
-      .delete<ITask>(`${this.baseUrl}/${taskId}`, {
-        withCredentials: true,
-      })
-      .subscribe((res) => {
-        console.log(res);
-      });
+    return this.http.delete<ITask>(`${this.baseUrl}/${taskId}`, {
+      withCredentials: true,
+    });
   }
 }
