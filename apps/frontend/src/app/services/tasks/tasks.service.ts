@@ -14,6 +14,23 @@ export class TasksService {
 
   constructor(private http: HttpClient) {}
 
+  createTask(title: string, description: string, assignedTo: string) {
+    return this.http.post(
+      `${this.baseUrl}/`,
+      {
+        title,
+        description,
+        assignedTo,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }
+
   getTasks() {
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {

@@ -4,12 +4,14 @@ import { IEmployee } from '../../models/employee';
 import { EmployeesService } from '../../services/employees/employees.service';
 import { CommonModule } from '@angular/common';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { TasksService } from '../../services/tasks/tasks.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 @Component({
@@ -30,8 +32,10 @@ export class CreateTaskComponent implements OnInit {
   });
   constructor(
     private http: HttpClient,
+    private router: Router,
     private employeesService: EmployeesService,
     private tasksService: TasksService,
+    private fb: FormBuilder,
   ) {}
   ngOnInit(): void {
     this.getEmployees();
@@ -44,6 +48,12 @@ export class CreateTaskComponent implements OnInit {
   }
   createEmployee() {
     console.log(this.createEmpoyeeForm.value);
+    const { title, description, assignTo } = this.createEmpoyeeForm.value;
+    this.tasksService
+      .createTask(title ?? '', description ?? '', assignTo ?? '')
+      .subscribe(() => {
+        this.router.navigate(['']);
+      });
   }
   isTitleTaken(title: string) {
     if (title !== 'undefined' && title.length > 0) {

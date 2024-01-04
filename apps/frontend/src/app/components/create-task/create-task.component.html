@@ -33,8 +33,9 @@
           formControlName="assignTo"
           class="form-select"
           aria-label="Default select example"
+          [value]="createEmpoyeeForm.value.assignTo"
         >
-          <option selected disabled>Assign To</option>
+          <!-- <option selected >Assign To</option> -->
           <option *ngFor="let employee of employees" [value]="employee._id">
             {{ employee.firstname }} {{ employee.lastname }}
           </option>
