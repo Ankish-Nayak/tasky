@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormsModule,
   FormGroup,
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { signupParams } from 'types';
 import { AuthService } from '../../../services/auth/auth.service';
 import { RootService } from '../../../services/root/root.service';
 
@@ -18,6 +17,7 @@ import { RootService } from '../../../services/root/root.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  role: 'employee' | 'admin' = 'employee';
   signupForm = new FormGroup({
     firstname: new FormControl(''),
     lastname: new FormControl(''),
@@ -43,6 +43,5 @@ export class RegisterComponent {
   }
   setPageRender() {
     this.rootService.setSignupLoginPageRender('login');
-    // this.updatePageRender.emit('login');
   }
 }

@@ -46,6 +46,31 @@
       <label class="form-label" for="password">Password</label>
     </div>
 
+    <!-- role -->
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        value="admin"
+        name="role"
+        id="flexRadioAdmin"
+        formControlName="role"
+      />
+      <label class="form-check-label" for="flexRadioAdmin"> Admin </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        value="employee"
+        name="role"
+        id="flexRadioEmployee"
+        formControlName="role"
+        checked
+      />
+      <label class="form-check-label" for="flexRadioEmployee"> Employee </label>
+    </div>
+
     <!-- Submit button -->
     <button type="submit" class="btn btn-primary btn-block mb-4">Signup</button>
 

@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@popperjs/core": "^2.11.8",
     "date-fns": "^3.0.6",
     "popper.js": "^1.16.1",
     "rxjs": "~7.8.0",
