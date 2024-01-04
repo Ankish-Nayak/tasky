@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RootService } from '../../services/root/root.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 @Injectable()
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TooltipModule, BsDropdownModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
