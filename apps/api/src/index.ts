@@ -4,6 +4,7 @@ import cors from "cors";
 import { router as adminRouter } from "./routes/admins";
 import { router as employeeRouter } from "./routes/employees";
 import { router as taskRouter } from "./routes/tasks";
+import { router as userRouter } from "./routes/users";
 import errorHandler from "./middlewares/errorHandler";
 import { run as connectToDb } from "models";
 
@@ -18,7 +19,11 @@ export const secret: string = process.env.SECRET;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:4200",
+    ],
     credentials: true,
   }),
 );
@@ -29,6 +34,7 @@ app.use(express.json());
 app.use("/employees", employeeRouter);
 app.use("/admins", adminRouter);
 app.use("/tasks", taskRouter);
+app.use("/users", userRouter);
 
 app.use((req, res) => {
   console.log("not hit", req.originalUrl);

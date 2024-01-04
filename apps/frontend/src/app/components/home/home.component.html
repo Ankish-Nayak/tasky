@@ -1,1 +1,14 @@
-<p>home works!</p>
+<div class="container-fuild" id="homeMain">
+  <div class="row">
+    <div class="col-sm" id="homeLeft">
+      <img src="../../../assets/tasky.avif" />
+    </div>
+    <div class="col-sm" id="homeRight">
+      <app-login
+        *ngIf="pageRender === 'login'"
+        [setPageRender]="setPageRender"
+      ></app-login>
+      <app-register *ngIf="pageRender === 'signup'"></app-register>
+    </div>
+  </div>
+</div>

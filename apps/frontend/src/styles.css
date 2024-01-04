@@ -1,3 +1,7 @@
+#ds {
+  display: flex;
+  justify-content: space-between;
+}
 /* Application-wide Styles */
 h1 {
   color: #369;

@@ -2,7 +2,7 @@ import Cookies from "cookies";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "models";
-import { loginTypes } from "types";
+import { loginTypes, signupTypes } from "types";
 import { secret } from "..";
 import { refreshLoginSession } from "../helpers/removeExpiryToken";
 
@@ -44,6 +44,9 @@ export const logout = async (
   next: NextFunction,
 ) => {
   const userId = req.headers.userId;
+  const role = req.headers.role;
+  console.log("userId", userId);
+  console.log("role", role);
   try {
     const existingUser = await User.findById(userId);
     if (existingUser) {
@@ -82,6 +85,35 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
       }
     } else {
       res.status(400).json({ message: "invalid token" });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const parsedInputs = signupTypes.parse(req.body);
+    const { firstname, lastname, username, password, role } = parsedInputs;
+
+    const existingUser = await User.findOne({
+      username,
+    });
+    if (existingUser) {
+      res.status(422).json({ message: "User already exists" });
+    } else {
+      const newUser = await User.create({
+        firstname,
+        lastname,
+        username,
+        password,
+        role,
+      });
+      res.json({ message: "user created", username: newUser.username });
     }
   } catch (e) {
     next(e);

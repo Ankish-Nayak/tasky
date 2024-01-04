@@ -1,0 +1,20 @@
+#homeRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/**/
+#homeLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  width: 500px;
+}
+
+#homeMain {
+  padding-top: 100px;
+}

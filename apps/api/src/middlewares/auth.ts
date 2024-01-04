@@ -15,11 +15,10 @@ export const authenticateJWT = async (
     jwt.verify(token, secret, (err, payload) => {
       if (err) {
         console.log("jwt error");
-        res.status(401).json({ message: "jwt error" });
+        return res.status(401).json({ message: "jwt error" });
       }
       if (typeof payload === "undefined" || typeof payload === "string") {
-        res.status(498).json({ message: "invalid token" });
-        return;
+        return res.status(498).json({ message: "invalid token" });
       }
       req.headers["role"] = payload.role;
       req.headers["userId"] = payload.userId;

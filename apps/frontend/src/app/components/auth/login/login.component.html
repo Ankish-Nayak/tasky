@@ -1,1 +1,49 @@
-<p>login works!</p>
+<div class="w-75" id="login">
+  <form [formGroup]="loginFrom" (submit)="login()">
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input
+        type="email"
+        id="username"
+        class="form-control"
+        formControlName="username"
+      />
+      <label class="form-label" for="username">Email address</label>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+      <input
+        type="password"
+        formControlName="password"
+        id="password"
+        class="form-control"
+      />
+      <label class="form-label" for="password">Password</label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">login</button>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+      <p>Not a member? <a href="#!" (click)="setPageRender()">Register</a></p>
+      <p>or sign up with:</p>
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-facebook-f"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-google"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-twitter"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-github"></i>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn">
+  <div class="container-fluid d-flex justify-content-between">
+    <a class="navbar-brand" href="#"><p class="h1">Tasky</p></a>
     <button
       class="navbar-toggler"
       type="button"
@@ -12,7 +12,21 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <div *ngIf="!isLoggedIn">
+      <button type="button" (click)="(navigateToLogin)">
+        <span class="h3">login</span>
+      </button>
+      <button type="button" (click)="(navigateToRegister)">
+        <span class="h3">signup</span>
+      </button>
+    </div>
+
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+      *ngIf="isLoggedIn"
+    >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
@@ -50,6 +64,18 @@
         />
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="!isLoggedIn">
+  <div class="container-fluid d-flex justify-content">
+    <div class="">
+      <a class="navbar-brand" href="#"><p class="h1">Tasky</p></a>
+    </div>
+    <div>
+      <button type="button">login</button> <button type="button">signup</button>
     </div>
   </div>
 </nav>

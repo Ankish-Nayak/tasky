@@ -3,12 +3,12 @@ export const loginTypes = z.object({
   username: z.string().email(),
   password: z.string().min(6),
 });
-
 export const signupTypes = z.object({
   firstname: z.string(),
   lastname: z.string(),
   username: z.string().email(),
   password: z.string().min(6),
+  role: z.enum(["employee", "admin"]),
 });
 
 export const createTaskTypes = z.object({

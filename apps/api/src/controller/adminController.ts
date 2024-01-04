@@ -57,7 +57,7 @@ export const signup = async (
 ) => {
   try {
     const parsedInputs = signupTypes.parse(req.body);
-    const { firstname, lastname, username, password } = parsedInputs;
+    const { firstname, lastname, username, password, role } = parsedInputs;
 
     const existingUser = await User.findOne({
       username,

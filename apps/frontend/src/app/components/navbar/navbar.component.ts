@@ -1,19 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../services/auth/auth.service';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+@Injectable()
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  isLoggedIn: boolean = false;
+  loginForm = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl(''),
+  });
   constructor(
     private router: Router,
-    private http: HttpClient,
+    private authService: AuthService,
   ) {}
   navigateToLogin() {
     this.router.navigate(['/login']);
@@ -21,7 +27,21 @@ export class NavbarComponent {
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
-  isLoggedIn() {
-    return true;
+  async ngOnInit() {
+    this.isLoggedIn = await this.LoggedIn();
+  }
+  async LoggedIn() {
+    return await this.authService.me();
+  }
+  async logout() {
+    this.isLoggedIn = await this.authService.logout();
+  }
+  open() {
+    this.authService.open();
+  }
+  onSubmit() {
+    const { username, password } = this.loginForm.value;
+    console.log(username, password);
+    this.authService.login(username || '', password || '');
   }
 }
