@@ -17,6 +17,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
   role: 'admin' | 'employee' = 'admin';
+  filters: string[] = [];
   loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -46,8 +47,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/createTask']);
   }
   ngOnInit() {
-    this.LoggedIn();
+    this.isLoggedIn = this.authService.getIsLoggedIn();
     this.authService.userMessage$.subscribe((res) => {
+      this.updateFilterBy(res.role);
+      console.log(res);
       this.role = res.role;
     });
     this.authService.isLoggedInMessage$.subscribe((message) => {
@@ -59,8 +62,13 @@ export class NavbarComponent implements OnInit {
       console.log('navbar', this.isLoggedIn);
     });
   }
-  LoggedIn() {
-    this.authService.me();
+  updateFilterBy(role: 'admin' | 'employee') {
+    if (role === 'admin') {
+      console.log('dfadfd');
+      this.filters = ['approve', 'approved'];
+    } else {
+      this.filters = ['pending', 'done', 'progress', 'approved'];
+    }
   }
   async logout() {
     this.authService.logout();

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ITask } from '../../models/task';
 import { HttpClient } from '@angular/common/http';
-import { BASE_URL } from '../../../config/config';
 import { environment } from '../../../environments/environment.dev';
 
 @Injectable({
