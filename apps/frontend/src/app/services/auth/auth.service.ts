@@ -12,6 +12,14 @@ export class AuthService {
 
   private isLoggedIn: boolean = false;
 
+  private _userSource = new Subject<{
+    userId: string;
+    role: 'admin' | 'employee';
+    firstname: string;
+  }>();
+
+  userMessage? = this._userSource.asObservable();
+
   private _isLoggedInSource = new Subject<boolean>();
   isLoggedInMessage$ = this._isLoggedInSource.asObservable();
 
@@ -23,13 +31,23 @@ export class AuthService {
 
   me() {
     this.http
-      .get(`${this.baseUrl}/users/me`, {
-        withCredentials: true,
-      })
+      .get<{ firstname: string; id: string; role: 'admin' | 'employee' }>(
+        `${this.baseUrl}/users/me`,
+        {
+          withCredentials: true,
+        },
+      )
       .subscribe(
-        () => {
+        (res) => {
+          // this._userIdSource.next(res.id);
           this.isLoggedIn = true;
+          this._userSource.next({
+            userId: res.id,
+            role: res.role,
+            firstname: res.firstname,
+          });
           this._isLoggedInSource.next(true);
+          console.log('dd', res);
         },
         () => {
           this._isLoggedInSource.next(false);

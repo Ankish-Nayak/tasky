@@ -5,6 +5,9 @@ export const router = express.Router();
 
 router.post("/", authenticateJWT, taskController.createTask);
 
+// give based on role
+// if employee then gives task assigned to him
+// if admin then gives task assigned by him
 router.get(
   "/",
   authenticateJWT,
@@ -17,7 +20,14 @@ router.get(
     } else if (typeof assingedTo === "string") {
       return taskController.getTasksByAssignedToByEmployeeId(req, res, next);
     } else {
-      return taskController.getTasks(req, res, next);
+      // const role = req.headers.role as string;
+      // if (role === "admin") {
+      //   console.log("hit");
+      //   return taskController.getTasksByAssignedByAdminId(req, res, next);
+      // } else if (role === "employee") {
+      //   return taskController.getTasksByAssignedToByEmployeeId(req, res, next);
+      // }
+      return taskController.getTasksByJwtRole(req, res, next);
     }
   },
 );

@@ -22,6 +22,8 @@ export const authenticateJWT = async (
       }
       req.headers["role"] = payload.role;
       req.headers["userId"] = payload.userId;
+      console.log("role", req.headers["role"]);
+      console.log("userId", req.headers["userId"]);
       next();
     });
   } else {

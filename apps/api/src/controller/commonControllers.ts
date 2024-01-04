@@ -29,7 +29,7 @@ export const login = async (
       );
       const cookies = new Cookies(req, res);
       cookies.set("token", token);
-      res.json({ message: "User loggedId" });
+      res.json({ message: "User loggedId", id: existingUser._id });
     } else {
       res.status(402).json({ message: "User not found" });
     }
@@ -79,6 +79,8 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
       if (user) {
         res.json({
           firstname: user.firstname,
+          id: user._id,
+          role: user.role,
         });
       } else {
         res.status(404).json({ message: "user not found" });

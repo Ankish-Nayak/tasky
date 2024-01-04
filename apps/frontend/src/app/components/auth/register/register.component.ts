@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { signupParams } from 'types';
 import { AuthService } from '../../../services/auth/auth.service';
+import { RootService } from '../../../services/root/root.service';
 
 @Component({
   selector: 'app-register',
@@ -24,8 +25,11 @@ export class RegisterComponent {
     password: new FormControl(''),
     role: new FormControl(),
   });
-  @Output() updatePageRender = new EventEmitter();
-  constructor(private authService: AuthService) {}
+  // @Output() updatePageRender = new EventEmitter();
+  constructor(
+    private authService: AuthService,
+    private rootService: RootService,
+  ) {}
   signup() {
     const { username, firstname, lastname, password, role } =
       this.signupForm.value;
@@ -38,6 +42,7 @@ export class RegisterComponent {
     );
   }
   setPageRender() {
-    this.updatePageRender.emit('login');
+    this.rootService.setSignupLoginPageRender('login');
+    // this.updatePageRender.emit('login');
   }
 }

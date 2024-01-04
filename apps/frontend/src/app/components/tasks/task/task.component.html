@@ -1,0 +1,31 @@
+<div class="card" style="width: 18rem">
+  <div class="card-body">
+    <h5 class="card-title">{{ task.title }}</h5>
+    <p class="card-text">{{ task.description }}</p>
+    <p class="card-text">
+      AssignedBy:
+
+      <a href="#" class="card-link">{{ task.assignedBy }}</a>
+    </p>
+    <p class="card-text">AssignedOn: {{ task.createdAt }}</p>
+    <p class="card-text">Status: {{ task.status }}</p>
+
+    <a
+      href="#"
+      class="btn btn-primary"
+      *ngIf="isAdmin() && this.message !== 'approved'"
+      >{{ getMessage() }}</a
+    >
+
+    <a
+      href="#"
+      class="btn btn-primary disabled"
+      *ngIf="isAdmin() && this.task.status === 'approved'"
+      >{{ getMessage() }}</a
+    >
+
+    <a href="#" class="btn btn-primary" *ngIf="!isAdmin()">{{
+      getMessage()
+    }}</a>
+  </div>
+</div>

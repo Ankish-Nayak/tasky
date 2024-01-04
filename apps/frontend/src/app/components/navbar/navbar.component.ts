@@ -54,4 +54,11 @@ export class NavbarComponent implements OnInit {
     console.log(username, password);
     this.authService.login(username || '', password || '');
   }
+  login() {
+    console.log('clickeddfdfd');
+    this.rootService.setSignupLoginPageRender('login');
+  }
+  signup() {
+    this.rootService.setSignupLoginPageRender('signup');
+  }
 }

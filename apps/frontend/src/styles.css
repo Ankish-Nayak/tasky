@@ -1,7 +1,7 @@
-#ds {
-  display: flex;
-  justify-content: space-between;
-}
+/* #ds { */
+/*   display: flex; */
+/*   justify-content: space-between; */
+/* } */
 /* Application-wide Styles */
 h1 {
   color: #369;
@@ -14,15 +14,14 @@ h3 {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
 }
-/* body { */
-/*   margin: 2em; */
-/* } */
+
 body,
 input[type="text"],
 button {
   color: #333;
   font-family: Cambria, Georgia, serif;
 }
+
 button {
   background-color: #eee;
   border: none;
@@ -45,6 +44,9 @@ button:disabled {
   cursor: auto;
 }
 
+html {
+  font-size: 14px;
+}
 /* everywhere else */
 * {
   font-family: Arial, Helvetica, sans-serif;

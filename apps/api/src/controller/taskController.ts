@@ -217,6 +217,30 @@ export const getTasksByAsssigedByLoggedInEmployeeId = async (
   }
 };
 
+export const getTasksByJwtRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const role = req.headers.role as string;
+  const userId = req.headers.userId as string;
+  try {
+    if (role === "admin") {
+      const tasks = await Task.find({
+        assignedBy: userId,
+      });
+      res.json({ tasks });
+    } else if (role === "employee") {
+      const tasks = await Task.find({
+        assignedTo: userId,
+      });
+      res.json({ tasks });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const getTasksByAssignedToByEmployeeId = async (
   req: Request,
   res: Response,
