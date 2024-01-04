@@ -1,0 +1,46 @@
+<div class="container-fuild" id="createTaskMain">
+  <div class="row">
+    <div class="col-sm" id="createTaskLeft">
+      <img src="../../../assets/tasky.avif" />
+    </div>
+    <div class="col-sm" id="createTaskRight">
+      <form [formGroup]="createEmpoyeeForm" (submit)="createEmployee()">
+        <div class="mb-3">
+          <label for="title" class="form-label">Give Title</label>
+          <input
+            type="text"
+            autofocus
+            class="form-control"
+            formControlName="title"
+            id="title"
+            [ngModel]="title"
+            (ngModelChange)="isTitleTaken($event)"
+            aria-describedby="titleHelp"
+          />
+          <div id="titleHelp" class="form-text">
+            {{ this.titleHelperMessage }}
+          </div>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Describe Task</span>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            aria-label="With textarea"
+          ></textarea>
+        </div>
+        <select
+          formControlName="assignTo"
+          class="form-select"
+          aria-label="Default select example"
+        >
+          <option selected disabled>Assign To</option>
+          <option *ngFor="let employee of employees" [value]="employee._id">
+            {{ employee.firstname }} {{ employee.lastname }}
+          </option>
+        </select>
+        <button type="submit" class="btn btn-primary">AssignTask</button>
+      </form>
+    </div>
+  </div>
+</div>

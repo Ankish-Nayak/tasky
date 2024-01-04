@@ -14,6 +14,7 @@
       href="#"
       class="btn btn-primary"
       *ngIf="isAdmin() && this.message !== 'approved'"
+      (click)="(handleTask)"
       >{{ getMessage() }}</a
     >
 
@@ -21,11 +22,20 @@
       href="#"
       class="btn btn-primary disabled"
       *ngIf="isAdmin() && this.task.status === 'approved'"
+      (click)="(handleTask)"
       >{{ getMessage() }}</a
     >
 
-    <a href="#" class="btn btn-primary" *ngIf="!isAdmin()">{{
-      getMessage()
-    }}</a>
+    <a
+      href="#"
+      class="btn btn-primary"
+      *ngIf="!isAdmin()"
+      (click)="(handleTask)"
+      >{{ getMessage() }}</a
+    >
+    <!-- <app-admin-bottom-buttons *ngIf="isAdmin()"></app-admin-bottom-buttons> -->
+    <!-- <app-employee-bottom-buttons -->
+    <!--   *ngIf="!isAdmin()" -->
+    <!-- ></app-employee-bottom-buttons> -->
   </div>
 </div>

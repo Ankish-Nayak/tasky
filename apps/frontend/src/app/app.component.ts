@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
+import { AuthService } from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +15,23 @@ import { HomeComponent } from './components/home/home.component';
     NavbarComponent,
     HttpClientModule,
     HomeComponent,
+    RouterModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'tasky';
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+  ngOnInit(): void {
+    this.authService.isLoggedInMessage$.subscribe((res) => {
+      if (!res) {
+        this.router.navigate(['']);
+      }
+    });
+  }
 }

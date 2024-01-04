@@ -1,6 +1,10 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn">
   <div class="container-fluid d-flex justify-content-between">
-    <a class="navbar-brand" href="#"><p class="h1">Tasky</p></a>
+    <a class="navbar-brand" href="" (click)="navigateToHome($event)">
+      <p class="h1 cursor-pointer">Tasky</p>
+    </a>
+
+    <!-- <p class="h1 cursor-pointer">Tasky</p> -->
     <button
       class="navbar-toggler"
       type="button"
@@ -28,8 +32,13 @@
       *ngIf="isLoggedIn"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+          <a
+            class="nav-link active"
+            href="/createTask"
+            (click)="navigateToCreateTask($event)"
+            >CreateTask</a
+          >
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>

@@ -25,6 +25,20 @@ export class TasksService {
         this._tasks.next(res.tasks);
       });
   }
+  isTaskTitleTaken(title: string) {
+    return this.http.post<{ titleTaken: boolean }>(
+      `${this.baseUrl}/title-taken`,
+      {
+        title,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }
   markAsApproved(taskId: string) {
     this.http
       .put<{ id: string }>(

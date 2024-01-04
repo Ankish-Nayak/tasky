@@ -281,6 +281,26 @@ export const getTasksByAssignedByAdminId = async (
   }
 };
 
+export const isTitleTaken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { title } = req.body;
+  try {
+    const task = await Task.findOne({ title });
+    let titleTaken = false;
+    if (task) {
+      titleTaken = true;
+    } else {
+      titleTaken = false;
+    }
+    res.json({ titleTaken });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const getTaskById = async (
   req: Request,
   res: Response,

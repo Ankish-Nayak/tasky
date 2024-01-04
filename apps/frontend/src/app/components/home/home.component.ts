@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.getIsLoggedIn();
     this.authService.isLoggedInMessage$.subscribe((message) => {
       this.isLoggedIn = message;
     });

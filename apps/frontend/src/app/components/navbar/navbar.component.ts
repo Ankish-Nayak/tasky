@@ -14,6 +14,7 @@ import { RootService } from '../../services/root/root.service';
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
+  role: 'admin' | 'employee' = 'admin';
   loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -23,14 +24,30 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private rootService: RootService,
   ) {}
-  navigateToLogin() {
+  isAdmin() {
+    return this.role === 'admin';
+  }
+  navigateToHome(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/']);
+  }
+  navigateToLogin(event: MouseEvent) {
+    event.preventDefault();
     this.router.navigate(['/login']);
   }
-  navigateToRegister() {
+  navigateToRegister(event: MouseEvent) {
+    event.preventDefault();
     this.router.navigate(['/register']);
+  }
+  navigateToCreateTask(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/createTask']);
   }
   ngOnInit() {
     this.LoggedIn();
+    this.authService.userMessage$.subscribe((res) => {
+      this.role = res.role;
+    });
     this.authService.isLoggedInMessage$.subscribe((message) => {
       if (message) {
         this.isLoggedIn = true;

@@ -22,13 +22,16 @@ export class AuthService {
     firstname: 'John',
   });
 
-  userMessage? = this._userSource.asObservable();
+  userMessage$ = this._userSource.asObservable();
 
-  private _isLoggedInSource = new Subject<boolean>();
+  private _isLoggedInSource = new BehaviorSubject<boolean>(false);
   isLoggedInMessage$ = this._isLoggedInSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
+  get isLoggedInSource() {
+    return this._isLoggedInSource.value;
+  }
   getIsLoggedIn() {
     return this.isLoggedIn;
   }

@@ -17,7 +17,7 @@ export const getEmployees = async (
       };
       return newUser;
     });
-    res.json({ newUsers });
+    res.json({ employees: newUsers });
   } catch (e) {
     next(e);
   }
@@ -41,7 +41,7 @@ export const getEmployee = async (
         lastname: user.lastname,
         username: user.username,
       };
-      res.json({ newUser });
+      res.json({ employee: newUser });
     } else {
       res.status(404).json({ message: "User not found" });
     }
