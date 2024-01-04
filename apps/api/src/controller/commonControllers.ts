@@ -29,7 +29,11 @@ export const login = async (
       );
       const cookies = new Cookies(req, res);
       cookies.set("token", token);
-      res.json({ message: "User loggedId", id: existingUser._id });
+      res.json({
+        message: "User loggedId",
+        id: existingUser._id,
+        role: existingUser.role,
+      });
     } else {
       res.status(402).json({ message: "User not found" });
     }
@@ -115,7 +119,11 @@ export const signup = async (
         password,
         role,
       });
-      res.json({ message: "user created", username: newUser.username });
+      res.json({
+        message: "user created",
+        username: newUser.username,
+        role: newUser.role,
+      });
     }
   } catch (e) {
     next(e);

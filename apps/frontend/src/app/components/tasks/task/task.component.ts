@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { ITask } from '../../../models/task';
 import humanReadableDate from '../../../helpers/HumanReadableDate';
 import { AuthService } from '../../../services/auth/auth.service';
 
+@Injectable()
 @Component({
   selector: 'app-task',
   standalone: true,
@@ -23,7 +24,7 @@ export class TaskComponent implements OnInit {
     this.task.createdAt = humanReadableDate(this.task.createdAt);
     this.authService.userMessage?.subscribe((message) => {
       this.role = message.role;
-      console.log('d', this.role);
+      console.log('task', this.role);
     });
   }
   isAdmin(): boolean {

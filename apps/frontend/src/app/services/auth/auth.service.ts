@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { loginParams, signupParams } from 'types';
 import { environment } from '../../../environments/environment.dev';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,15 @@ export class AuthService {
 
   private isLoggedIn: boolean = false;
 
-  private _userSource = new Subject<{
+  private _userSource = new BehaviorSubject<{
     userId: string;
     role: 'admin' | 'employee';
     firstname: string;
-  }>();
+  }>({
+    userId: 'defaultUserId',
+    role: 'employee',
+    firstname: 'John',
+  });
 
   userMessage? = this._userSource.asObservable();
 
@@ -72,17 +76,26 @@ export class AuthService {
       password,
     };
     this.http
-      .put(`${this.baseUrl}/users/login`, data, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
+      .put<{ firstname: string; id: string; role: 'admin' | 'employee' }>(
+        `${this.baseUrl}/users/login`,
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
       .subscribe(
         (res) => {
           console.log(res);
           this.isLoggedIn = true;
           this._isLoggedInSource.next(true);
+          this._userSource.next({
+            userId: res.id,
+            role: res.role,
+            firstname: res.firstname,
+          });
         },
         () => {
           this.isLoggedIn = false;
@@ -127,12 +140,16 @@ export class AuthService {
       role,
     };
     this.http
-      .post(`${this.baseUrl}/users/signup`, data, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
+      .post<{ firstname: string; id: string; role: 'admin' | 'employee' }>(
+        `${this.baseUrl}/users/signup`,
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
       .subscribe(
         (res) => {
           console.log(res);
