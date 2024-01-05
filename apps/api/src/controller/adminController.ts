@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "models";
 import { signupTypes } from "types";
+import { transformUser, transformUsers } from "../helpers/transformUser";
 export const getAdmins = async (
   _req: Request,
   res: Response,
@@ -8,16 +9,7 @@ export const getAdmins = async (
 ) => {
   try {
     const users = await User.find({ role: "admin" });
-    const newUsers = users.map((user) => {
-      const newUser = {
-        _id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        username: user.username,
-      };
-      return newUser;
-    });
-    res.json({ newUsers });
+    res.json({ newUsers: transformUsers(users) });
   } catch (e) {
     next(e);
   }
@@ -35,13 +27,7 @@ export const getAdmin = async (
       _id: userId,
     });
     if (user) {
-      const newUser = {
-        _id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        username: user.username,
-      };
-      res.json({ newUser });
+      res.json({ newUser: transformUser(user) });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -50,6 +36,22 @@ export const getAdmin = async (
   }
 };
 
+export const getAdminsByRegex = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const regex = req.params.regex as string;
+  try {
+    const admins = await User.find({
+      role: "admin",
+      username: { $regex: regex, $options: "i" },
+    });
+    res.json({ employees: transformUsers(admins) });
+  } catch (e) {
+    next(e);
+  }
+};
 export const signup = async (
   req: Request,
   res: Response,
@@ -57,7 +59,7 @@ export const signup = async (
 ) => {
   try {
     const parsedInputs = signupTypes.parse(req.body);
-    const { firstname, lastname, username, password, role } = parsedInputs;
+    const { firstname, lastname, username, password } = parsedInputs;
 
     const existingUser = await User.findOne({
       username,

@@ -1,12 +1,12 @@
-import express from "express";
-import { config } from "dotenv";
 import cors from "cors";
+import { config } from "dotenv";
+import express from "express";
+import { run as connectToDb } from "models";
+import errorHandler from "./middlewares/errorHandler";
 import { router as adminRouter } from "./routes/admins";
 import { router as employeeRouter } from "./routes/employees";
 import { router as taskRouter } from "./routes/tasks";
 import { router as userRouter } from "./routes/users";
-import errorHandler from "./middlewares/errorHandler";
-import { run as connectToDb } from "models";
 
 config();
 const app = express();

@@ -5,6 +5,7 @@ import { User } from "models";
 import { loginTypes, signupTypes } from "types";
 import { secret } from "..";
 import { refreshLoginSession } from "../helpers/removeExpiryToken";
+import { transformUsers } from "../helpers/transformUser";
 
 export const login = async (
   req: Request,
@@ -153,23 +154,31 @@ export const getUserById = async (
   }
 };
 
-export const getUsers = async (
+export const getUsersByRegex = async (
   req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const regex = req.params.regex as string;
+  console.log(regex);
+  try {
+    const employees = await User.find({
+      username: { $regex: regex, $options: "i" },
+    });
+    res.json({ employees: transformUsers(employees) });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getUsers = async (
+  _req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
     const users = await User.find({});
-    const newUsers = users.map((user) => {
-      const newUser = {
-        _id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        username: user.username,
-      };
-      return newUser;
-    });
-    res.json({ users: newUsers });
+    res.json({ users: transformUsers(users) });
   } catch (e) {
     next(e);
   }

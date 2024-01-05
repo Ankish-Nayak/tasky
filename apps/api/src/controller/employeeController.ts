@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "models";
 import { signupTypes } from "types";
+import { transformUsers } from "../helpers/transformUser";
 export const getEmployees = async (
   _req: Request,
   res: Response,
@@ -18,6 +19,23 @@ export const getEmployees = async (
       return newUser;
     });
     res.json({ employees: newUsers });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getEmployeesByRegex = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const regex = req.params.regex as string;
+  try {
+    const employees = await User.find({
+      role: "employee",
+      username: { $regex: regex, $options: "i" },
+    });
+    res.json({ employees: transformUsers(employees) });
   } catch (e) {
     next(e);
   }

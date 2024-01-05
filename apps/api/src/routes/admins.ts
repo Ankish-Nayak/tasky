@@ -16,3 +16,9 @@ router.get("/", authenticateJWT, adminController.getAdmins);
 router.get("/:userId", authenticateJWT, adminController.getAdmin);
 
 router.put("/logout", authenticateJWT, commonController.logout);
+
+router.get(
+  "/username/:regex",
+  authenticateJWT,
+  adminController.getAdminsByRegex,
+);
