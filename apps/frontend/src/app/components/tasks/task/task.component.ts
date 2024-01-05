@@ -44,23 +44,21 @@ export class TaskComponent implements OnInit {
       }
     });
   }
+  getAdminCardText() {
+    return this.task.assignedTo.firstname;
+  }
+  getEmployeeCardText() {
+    return this.task.assignedBy.firstname;
+  }
+  getCardText() {
+    return this.role === 'admin'
+      ? this.getAdminCardText()
+      : this.getEmployeeCardText();
+  }
   isAdmin(): boolean {
     return this.role === 'admin';
   }
   getMessage(): string {
-    // if (this.role === 'admin') {
-    //   if (this.task.status === 'pending') {
-    //     this.message = 'approve';
-    //   } else {
-    //     this.message = 'approved';
-    //   }
-    // } else {
-    //   if (this.task.status === 'pending') {
-    //     this.message = 'start';
-    //   } else if (this.task.status === 'progress') {
-    //     this.message = 'done';
-    //   }
-    // }
     return this.message;
   }
 
@@ -102,6 +100,7 @@ export class TaskComponent implements OnInit {
     if (this.role === 'employee') {
       this.taskService.markAsProgress(this.task._id).subscribe((res) => {
         this.message = 'done';
+        this.task.status = 'done';
         console.log(res);
       });
     }
@@ -110,6 +109,7 @@ export class TaskComponent implements OnInit {
     if (this.role === 'admin') {
       this.taskService.markAsApproved(this.task._id).subscribe((res) => {
         this.message = 'approved';
+        this.task.status = 'approved';
       });
     }
   }
@@ -117,6 +117,7 @@ export class TaskComponent implements OnInit {
     if (this.role === 'employee') {
       this.taskService.markAsDone(this.task._id).subscribe((res) => {
         this.message = 'approve';
+        this.task.status = 'done';
       });
     } else {
       console.log('error');

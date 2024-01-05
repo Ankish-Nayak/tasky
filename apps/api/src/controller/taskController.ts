@@ -89,7 +89,6 @@ export const approveTask = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const userId = req.headers.userId;
   const taskId = req.params.taskId as string;
   const role = req.headers.role as string;
   if (role !== "admin") {
@@ -98,7 +97,7 @@ export const approveTask = async (
       .json({ message: "admin is only allowed to approve task" });
   }
   try {
-    const existingTask = await Task.findById(userId);
+    const existingTask = await Task.findById(taskId);
     if (existingTask) {
       const updatedTask = await Task.findByIdAndUpdate(taskId, {
         status: "approved",
@@ -228,7 +227,15 @@ export const getTasksByJwtRole = async (
     if (role === "admin") {
       const tasks = await Task.find({
         assignedBy: userId,
-      });
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        });
       res.json({ tasks });
     } else if (role === "employee") {
       const tasks = await Task.find({

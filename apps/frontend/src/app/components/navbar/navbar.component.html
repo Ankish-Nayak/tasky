@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn.value">
   <div class="container-fluid d-flex justify-content-between">
     <a class="navbar-brand" href="" (click)="navigateToHome($event)">
       <p class="h1 cursor-pointer" tooltip="heafe">Tasky</p>
@@ -17,7 +17,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div *ngIf="!isLoggedIn">
+    <div *ngIf="!isLoggedIn.value">
       <button type="button" (click)="(navigateToLogin)">
         <span class="h3">login</span>
       </button>
@@ -29,7 +29,7 @@
     <div
       class="collapse navbar-collapse"
       id="navbarSupportedContent"
-      *ngIf="isLoggedIn"
+      *ngIf="isLoggedIn.value"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item" *ngIf="isAdmin()">
@@ -37,6 +37,7 @@
             class="nav-link active"
             href="/createTask"
             (click)="navigateToCreateTask($event)"
+            tooltip="Assign task to employee"
             >CreateTask</a
           >
         </li>
@@ -46,7 +47,8 @@
         <li class="nav-item dropdown" dropdown>
           <a
             class="nav-link dropdown-toggle"
-            href="#"
+            href=""
+            (click)="$event.preventDefault()"
             role="button"
             dropdownToggle
             data-bs-toggle="dropdown"
@@ -70,7 +72,7 @@
         <input
           class="form-control me-2"
           type="search"
-          placeholder="Search"
+          placeholder="Search Task by Title"
           aria-label="Search"
         />
         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -80,7 +82,7 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="!isLoggedIn">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="!isLoggedIn.value">
   <div class="container-fluid d-flex justify-content">
     <div class="">
       <a class="navbar-brand" href="#"><p class="h1">Tasky</p></a>

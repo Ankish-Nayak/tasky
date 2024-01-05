@@ -14,3 +14,7 @@ router.get("/me", authenticateJWT, commonController.me);
 router.put("/login", commonController.login);
 
 router.post("/signup", commonController.signup);
+
+router.get("/", authenticateJWT, commonController.getUsers);
+
+router.get("/:userId", authenticateJWT, commonController.getUserById);

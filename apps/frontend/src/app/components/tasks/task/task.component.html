@@ -3,9 +3,9 @@
     <h5 class="card-title">{{ task.title }}</h5>
     <p class="card-text">{{ task.description }}</p>
     <p class="card-text">
-      AssignedBy:
-
-      <a href="#" class="card-link">{{ task.assignedBy }}</a>
+      {{ this.role === "admin" ? "AssignedTo: " : "AssignedBy: " }}
+      <!---->
+      <a href="#" class="card-link">{{ getCardText() }}</a>
     </p>
     <p class="card-text">AssignedOn: {{ task.createdAt }}</p>
     <p>
@@ -31,13 +31,16 @@
     <a
       href="#"
       class="btn btn-primary"
-      *ngIf="!isAdmin()"
+      *ngIf="!isAdmin() && this.task.status !== 'approved'"
       (click)="handleTask()"
       >{{ getMessage() }}</a
     >
-    <!-- <app-admin-bottom-buttons *ngIf="isAdmin()"></app-admin-bottom-buttons> -->
-    <!-- <app-employee-bottom-buttons -->
-    <!--   *ngIf="!isAdmin()" -->
-    <!-- ></app-employee-bottom-buttons> -->
+    <a
+      href="#"
+      class="btn btn-primary disabled"
+      *ngIf="!isAdmin() && this.task.status === 'approved'"
+      (click)="handleTask()"
+      >{{ getMessage() }}</a
+    >
   </div>
 </div>

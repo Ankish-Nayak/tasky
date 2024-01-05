@@ -25,6 +25,7 @@ export class CreateTaskComponent implements OnInit {
   employees: IEmployee[] = [];
   title: string = '';
   titleHelperMessage: string = 'Provide title to task.';
+  buttonDisabled: boolean = true;
   createEmpoyeeForm = new FormGroup({
     title: new FormControl(''),
     description: new FormControl(''),
@@ -39,6 +40,14 @@ export class CreateTaskComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getEmployees();
+    this.createEmpoyeeForm.valueChanges.subscribe((value) => {
+      // TODO: add proper zod validation
+      if (Object.values(value).some((prop) => prop === null)) {
+        this.buttonDisabled = true;
+      } else {
+        this.buttonDisabled = false;
+      }
+    });
   }
   getEmployees() {
     this.employeesService.getEmployees().subscribe((res) => {
@@ -60,8 +69,10 @@ export class CreateTaskComponent implements OnInit {
       this.tasksService.isTaskTitleTaken(title).subscribe((res) => {
         if (res.titleTaken) {
           this.titleHelperMessage = 'Titls is Taken.';
+          this.buttonDisabled = true;
         } else {
           this.titleHelperMessage = 'Provide title to task.';
+          this.buttonDisabled = false;
         }
       });
     }

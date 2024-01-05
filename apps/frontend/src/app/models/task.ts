@@ -5,6 +5,22 @@ export interface ITask {
   status: 'pending' | 'progress' | 'done' | 'approved';
   createdAt: string;
   updatedAt: string;
-  assignedTo: string;
-  assignedBy: string;
+  assignedTo: {
+    _id: string;
+    firstname: string;
+    lastname: string;
+  };
+  assignedBy: {
+    _id: string;
+    firstname: string;
+    lastname: string;
+  };
 }
+
+export type IFilter =
+  | 'pending'
+  | 'done'
+  | 'progress'
+  | 'approved'
+  | null
+  | 'approve';

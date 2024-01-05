@@ -4,6 +4,7 @@
       <img src="../../../assets/tasky.avif" />
     </div>
     <div class="col-sm" id="createTaskRight">
+      <p class="h3">Create Task</p>
       <form [formGroup]="createEmpoyeeForm" (submit)="createEmployee()">
         <div class="mb-3">
           <label for="title" class="form-label">Give Title</label>
@@ -12,6 +13,7 @@
             autofocus
             class="form-control"
             formControlName="title"
+            placeholder="Enter title"
             id="title"
             [ngModel]="title"
             (ngModelChange)="isTitleTaken($event)"
@@ -26,12 +28,14 @@
           <textarea
             class="form-control"
             formControlName="description"
+            placeholder="Elaborate Task"
             aria-label="With textarea"
           ></textarea>
         </div>
         <select
           formControlName="assignTo"
           class="form-select"
+          ariaPlaceholder="Assign to employee"
           aria-label="Default select example"
           [value]="createEmpoyeeForm.value.assignTo"
         >
@@ -40,7 +44,13 @@
             {{ employee.firstname }} {{ employee.lastname }}
           </option>
         </select>
-        <button type="submit" class="btn btn-primary">AssignTask</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="this.buttonDisabled"
+        >
+          AssignTask
+        </button>
       </form>
     </div>
   </div>

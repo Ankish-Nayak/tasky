@@ -129,3 +129,48 @@ export const signup = async (
     next(e);
   }
 };
+
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.params.userId as string;
+  try {
+    const user = await User.findById(userId);
+    if (user) {
+      return res.json({
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        username: user.username,
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const users = await User.find({});
+    const newUsers = users.map((user) => {
+      const newUser = {
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        username: user.username,
+      };
+      return newUser;
+    });
+    res.json({ users: newUsers });
+  } catch (e) {
+    next(e);
+  }
+};
