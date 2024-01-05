@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CreateTaskComponent } from './components/create-task/create-task.component';
 import { HomeComponent } from './components/home/home.component';
+import { UpdateTaskComponent } from './components/update-task/update-task.component';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,10 @@ export const routes: Routes = [
   {
     path: 'createTask',
     component: CreateTaskComponent,
+  },
+  {
+    path: 'updateTask',
+    component: UpdateTaskComponent,
   },
   {
     path: '**',

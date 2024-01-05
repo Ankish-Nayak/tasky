@@ -4,6 +4,7 @@ import { ITask } from '../../../models/task';
 import humanReadableDate from '../../../helpers/HumanReadableDate';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TasksService } from '../../../services/tasks/tasks.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 @Component({
@@ -20,6 +21,7 @@ export class TaskComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private taskService: TasksService,
+    private router: Router,
   ) {
     this.task = {} as ITask;
   }
@@ -43,6 +45,9 @@ export class TaskComponent implements OnInit {
         }
       }
     });
+  }
+  navigateToUpdateTask() {
+    this.router.navigate(['/updateTask']);
   }
   getAdminCardText() {
     return this.task.assignedTo.firstname;

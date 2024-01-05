@@ -20,7 +20,7 @@ router.get(
     if (typeof username === "string") {
       return employeeController.getEmployeesUsername(req, res, next);
     } else {
-      return commonController.getUsers(req, res, next);
+      return employeeController.getEmployees(req, res, next);
     }
   },
 );

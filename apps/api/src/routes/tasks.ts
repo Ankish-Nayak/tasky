@@ -34,6 +34,7 @@ router.get(
 
 router.post("/title-taken", authenticateJWT, taskController.isTitleTaken);
 
+router.put("/:taskId", authenticateJWT, taskController.updateTaskById);
 router.get("/:taskId", authenticateJWT, taskController.getTaskById);
 
 router.delete("/:taskId", authenticateJWT, taskController.deleteTask);

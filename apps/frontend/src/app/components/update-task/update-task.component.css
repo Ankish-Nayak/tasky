@@ -1,0 +1,26 @@
+#createTaskRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+}
+#createTaskLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#createTaskRight > form {
+  display: block;
+  width: 600px;
+}
+
+img {
+  width: 500px;
+}
+
+#createTaskMain {
+  padding-top: 100px;
+}

@@ -32,36 +32,50 @@
       *ngIf="isLoggedIn.value"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item" *ngIf="isAdmin()">
+        <li class="nav-item" *ngFor="let navLink of navLinks">
           <a
-            class="nav-link active"
-            href="/createTask"
-            (click)="navigateToCreateTask($event)"
-            tooltip="Assign task to employee"
-            >CreateTask</a
+            class="nav-link {{ navLink.isActive ? 'active' : '' }}"
+            href="{{ navLink.navigateTo }}"
+            (click)="handleNavigateTo($event, navLink.name)"
+            >{{ navLink.name }}</a
           >
         </li>
+        <!-- <li class="nav-item" *ngIf="isAdmin()"> -->
+        <!--   <a -->
+        <!--     class="nav-link active" -->
+        <!--     href="/createTask" -->
+        <!--     (click)="navigateToCreateTask($event)" -->
+        <!--     tooltip="Assign task to employee" -->
+        <!--     >CreateTask</a -->
+        <!--   > -->
+        <!-- </li> -->
+        <!-- <li class="nav-item" *ngIf="isAdmin()"> -->
+        <!--   <a -->
+        <!--     class="nav-link cursor-pointer" -->
+        <!--     (click)="navigateToHome($event)" -->
+        <!--     tooltip="Assign task to employee" -->
+        <!--     >Tasks</a -->
+        <!--   > -->
+        <!-- </li> -->
         <!-- <li class="nav-item"> -->
         <!--   <a class="nav-link">Link</a> -->
         <!-- </li> -->
-        <li class="nav-item dropdown" dropdown>
+        <li class="nav-item dropdown" dropdown *ngIf="isLanding()">
           <a
-            class="nav-link dropdown-toggle"
-            href=""
+            class="nav-link dropdown-toggle cursor-pointer"
             (click)="$event.preventDefault()"
             role="button"
             dropdownToggle
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            FilterBy
+            FilterByStatus
           </a>
 
           <ul class="dropdown-menu" *dropdownMenu>
             <li *ngFor="let filter of filters">
               <a
-                class="dropdown-item"
-                href=""
+                class="dropdown-item cursor-pointer"
                 (click)="handleFilterBy($event, filter)"
                 >{{ filter }}</a
               >
@@ -74,12 +88,12 @@
       </ul>
 
       <!-- <form class="d-flex" role="search"> -->
-      <div>
+      <div *ngIf="isLanding()">
         <input
           class="form-control me-2"
-          type="search"
           list="suggestions"
-          [ngModel]="username"
+          [(ngModel)]="username"
+          [typeahead]="employeeList"
           placeholder="Search Task by {{
             this.role === 'admin' ? 'employee' : 'admin'
           }}"
@@ -89,13 +103,15 @@
         <!-- <select *ngFor="let employee of employeeList"> -->
         <!--   <option value="{{ employee._id }}">{{ employee.username }}</option> -->
         <!-- </select> -->
-        <!-- <datalist id="suggestions"> -->
+        <!-- <datalist id="suggestions" dropdown> -->
         <!--   <option *ngFor="let employee of employeeList"> -->
         <!--     {{ employee.username }} -->
         <!--   </option> -->
         <!-- </datalist> -->
-        <!-- <ul *dropdownMenu> -->
-        <!--   <li *ngFor="let employee of employeeList">{{ employee.username }}</li> -->
+        <!-- <ul id="suggestions" class="dropdown-menu" *dropdownMenu> -->
+        <!--   <li *ngFor="let employee of employeeList" class="dropdown-item"> -->
+        <!--     {{ employee.username }} -->
+        <!--   </li> -->
         <!-- </ul> -->
       </div>
 

@@ -4,8 +4,8 @@
       <img src="../../../assets/tasky.avif" />
     </div>
     <div class="col-sm" id="createTaskRight">
-      <p class="h3">Create Task</p>
-      <form [formGroup]="createTaskForm" (submit)="createTask()">
+      <p class="h3">Update Task</p>
+      <form [formGroup]="updateTaskForm" (submit)="updateTask()">
         <div class="mb-3">
           <label for="title" class="form-label">Give Title</label>
           <input
@@ -32,24 +32,24 @@
             aria-label="With textarea"
           ></textarea>
         </div>
-        <select
-          formControlName="assignTo"
-          class="form-select"
-          ariaPlaceholder="Assign to employee"
-          aria-label="Default select example"
-          [value]="createTaskForm.value.assignTo"
-        >
-          <!-- <option selected >Assign To</option> -->
-          <option *ngFor="let employee of employees" [value]="employee._id">
-            {{ employee.firstname }} {{ employee.lastname }}
-          </option>
-        </select>
+        <!-- <select -->
+        <!--   formControlName="assignTo" -->
+        <!--   class="form-select" -->
+        <!--   ariaPlaceholder="Assign to employee" -->
+        <!--   aria-label="Default select example" -->
+        <!--   [value]="createEmpoyeeForm.value.assignTo" -->
+        <!-- > -->
+        <!--   <!-- <option selected >Assign To</option> -->
+        <!--   <option *ngFor="let employee of employees" [value]="employee._id"> -->
+        <!--     {{ employee.firstname }} {{ employee.lastname }} -->
+        <!--   </option> -->
+        <!-- </select> -->
         <button
           type="submit"
           class="btn btn-primary"
           [disabled]="this.buttonDisabled"
         >
-          AssignTask
+          UpdateTask
         </button>
       </form>
     </div>

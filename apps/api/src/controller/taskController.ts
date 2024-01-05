@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Task, User } from "models";
-import { createTaskTypes } from "types";
+import { createTaskTypes, updateTaskTypes } from "types";
 export const createTask = async (
   req: Request,
   res: Response,
@@ -250,6 +250,59 @@ export const getTasksByJwtRole = async (
           select: "firstname lastname",
         });
       res.json({ tasks });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const updateTaskById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const taskId = req.params.taskId as string;
+  const role = req.headers.role as string;
+  const userId = req.headers.userId as string;
+  if (role !== "admin") {
+    return res
+      .status(400)
+      .json({ message: "admin can only update title and description" });
+  }
+  try {
+    const parsedInputs = updateTaskTypes.parse(req.body);
+    const { title, description } = parsedInputs;
+    const existingTask = await Task.findById(taskId);
+    if (existingTask) {
+      if (existingTask.assignedBy.toString() === userId) {
+        if (
+          existingTask.status === "progress" ||
+          existingTask.status === "pending"
+        ) {
+          const updatedTask = await Task.findByIdAndUpdate(
+            taskId,
+            {
+              title,
+              description,
+              updatedAt: new Date(),
+            },
+            {
+              new: true,
+            },
+          );
+          if (updatedTask) {
+            res.json({ updatedTask });
+          } else {
+            res.status(400).json({ message: "bad title or description" });
+          }
+        } else {
+          res
+            .status(400)
+            .json({ message: `task already in ${existingTask.status}` });
+        }
+      }
+    } else {
+      res.status(403).json({ message: "task dose not exists" });
     }
   } catch (e) {
     next(e);

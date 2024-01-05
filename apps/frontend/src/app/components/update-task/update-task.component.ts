@@ -1,33 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, Injectable, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IEmployee } from '../../models/employee';
 import { EmployeesService } from '../../services/employees/employees.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 
-@Injectable()
 @Component({
-  selector: 'app-create-task',
+  selector: 'app-update-task',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './create-task.component.html',
-  styleUrl: './create-task.component.css',
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './update-task.component.html',
+  styleUrl: './update-task.component.css',
 })
-export class CreateTaskComponent implements OnInit {
+export class UpdateTaskComponent {
   employees: IEmployee[] = [];
   title: string = '';
   titleHelperMessage: string = 'Provide title to task.';
   buttonDisabled: boolean = true;
-  createTaskForm = new FormGroup({
+  updateTaskForm = new FormGroup({
     title: new FormControl(''),
     description: new FormControl(''),
-    assignTo: new FormControl('Assign Value'),
   });
   constructor(
     private router: Router,
@@ -36,7 +29,7 @@ export class CreateTaskComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getEmployees();
-    this.createTaskForm.valueChanges.subscribe((value) => {
+    this.updateTaskForm.valueChanges.subscribe((value) => {
       // TODO: add proper zod validation
       if (Object.values(value).some((prop) => prop === null)) {
         this.buttonDisabled = true;
@@ -51,11 +44,11 @@ export class CreateTaskComponent implements OnInit {
       console.log(res);
     });
   }
-  createTask() {
-    console.log(this.createTaskForm.value);
-    const { title, description, assignTo } = this.createTaskForm.value;
+  updateTask() {
+    console.log(this.updateTaskForm.value);
+    const { title, description } = this.updateTaskForm.value;
     this.tasksService
-      .createTask(title ?? '', description ?? '', assignTo ?? '')
+      .updateTask(title ?? '', description ?? '')
       .subscribe(() => {
         this.router.navigate(['']);
       });

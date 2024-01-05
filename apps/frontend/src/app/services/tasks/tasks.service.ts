@@ -30,6 +30,21 @@ export class TasksService {
       },
     );
   }
+  updateTask(title: string, description: string) {
+    return this.http.put(
+      `${this.baseUrl}/`,
+      {
+        title,
+        description,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }
 
   getTasks() {
     this.http
