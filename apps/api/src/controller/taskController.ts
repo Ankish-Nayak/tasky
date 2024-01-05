@@ -240,7 +240,15 @@ export const getTasksByJwtRole = async (
     } else if (role === "employee") {
       const tasks = await Task.find({
         assignedTo: userId,
-      });
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        });
       res.json({ tasks });
     }
   } catch (e) {

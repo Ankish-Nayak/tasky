@@ -23,4 +23,11 @@ export class EmployeesService {
       },
     );
   }
+  getEmployeebyUsernamePrefix(prefix: string) {
+    const regex = `^${prefix}`;
+
+    return this.http.get<EmployeeList>(`${this.baseUrl}/username/${regex}`, {
+      withCredentials: true,
+    });
+  }
 }

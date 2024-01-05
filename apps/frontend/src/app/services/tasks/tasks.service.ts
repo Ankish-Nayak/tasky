@@ -41,6 +41,18 @@ export class TasksService {
         this._tasks.next(res.tasks);
       });
   }
+
+  getTaskByUsername(username: string) {
+    this.http
+      .get<{ tasks: ITask[] }>(`${this.baseUrl}/?username=${username}`, {
+        withCredentials: true,
+      })
+      .subscribe((res) => {
+        console.log(res);
+        this._tasks.next(res.tasks);
+      });
+  }
+
   isTaskTitleTaken(title: string) {
     return this.http.post<{ titleTaken: boolean }>(
       `${this.baseUrl}/title-taken`,

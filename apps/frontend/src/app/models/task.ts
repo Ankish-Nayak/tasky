@@ -23,4 +23,5 @@ export type IFilter =
   | 'progress'
   | 'approved'
   | null
-  | 'approve';
+  | 'approve'
+  | 'all';

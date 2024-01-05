@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Injectable, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -9,12 +14,20 @@ import { RootService } from '../../services/root/root.service';
 
 import { IFilter } from '../../models/task';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
+import { EmployeesService } from '../../services/employees/employees.service';
+import { IEmployee } from '../../models/employee';
 
 @Injectable()
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TooltipModule, BsDropdownModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TooltipModule,
+    BsDropdownModule,
+    FormsModule,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -34,12 +47,26 @@ export class NavbarComponent implements OnInit {
     username: new FormControl(''),
     password: new FormControl(''),
   });
+  username: string = '';
+  employeeList: IEmployee[] = [];
   constructor(
     private router: Router,
     private authService: AuthService,
     private rootService: RootService,
     private filtersService: FiltersService,
+    private employeeService: EmployeesService,
   ) {}
+  printTitle(title: string) {
+    console.log(title);
+    if (title.length === 0) {
+      this.employeeList = [];
+      return;
+    }
+    this.employeeService.getEmployeebyUsernamePrefix(title).subscribe((res) => {
+      console.log(res.employees);
+      this.employeeList = res.employees;
+    });
+  }
   isAdmin() {
     return this.role === 'admin';
   }
@@ -58,6 +85,14 @@ export class NavbarComponent implements OnInit {
   navigateToCreateTask(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/createTask']);
+  }
+  handleFilterBy(e: MouseEvent, filter: IFilter) {
+    e.preventDefault();
+    console.log(filter);
+    if (filter === 'all') {
+    } else {
+      this.updateFilterBy(filter);
+    }
   }
   ngOnInit() {
     this.isLoggedIn = {
@@ -101,19 +136,17 @@ export class NavbarComponent implements OnInit {
   roleBasedFilterBy(role: 'admin' | 'employee') {
     if (role === 'admin') {
       console.log('dfadfd');
-      this.filters = ['approve', 'approved'];
+      this.filters = ['approve', 'approved', 'all'];
     } else {
-      this.filters = ['pending', 'done', 'progress', 'approved'];
+      this.filters = ['pending', 'done', 'progress', 'approved', 'all'];
     }
   }
   updateFilterBy(selectedFilter: IFilter) {
     this.filtersService.updateFilter(selectedFilter);
   }
   async logout() {
+    this.router.navigate(['']);
     this.authService.logout();
-  }
-  open() {
-    this.authService.open();
   }
   onSubmit() {
     const { username, password } = this.loginForm.value;

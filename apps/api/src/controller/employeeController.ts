@@ -9,16 +9,23 @@ export const getEmployees = async (
 ) => {
   try {
     const users = await User.find({ role: "employee" });
-    const newUsers = users.map((user) => {
-      const newUser = {
-        _id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        username: user.username,
-      };
-      return newUser;
-    });
-    res.json({ employees: newUsers });
+    res.json({ employees: transformUsers(users) });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getEmployeesUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const username = req.query.username as string;
+  try {
+    const employees = await User.find({
+      username: { $regex: username, $options: "i" },
+    }).select("username firstname");
+    res.json({ employees });
   } catch (e) {
     next(e);
   }

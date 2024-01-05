@@ -107,7 +107,7 @@ export class TaskComponent implements OnInit {
   }
   approve() {
     if (this.role === 'admin') {
-      this.taskService.markAsApproved(this.task._id).subscribe((res) => {
+      this.taskService.markAsApproved(this.task._id).subscribe(() => {
         this.message = 'approved';
         this.task.status = 'approved';
       });
@@ -115,7 +115,7 @@ export class TaskComponent implements OnInit {
   }
   done() {
     if (this.role === 'employee') {
-      this.taskService.markAsDone(this.task._id).subscribe((res) => {
+      this.taskService.markAsDone(this.task._id).subscribe(() => {
         this.message = 'approve';
         this.task.status = 'done';
       });

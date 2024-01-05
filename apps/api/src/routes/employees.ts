@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import * as commonController from "../controller/commonControllers";
 import * as employeeController from "../controller/employeeController";
 import { authenticateJWT } from "../middlewares/auth";
@@ -12,7 +12,18 @@ router.post("/signup", employeeController.signup);
 
 router.put("/logout", authenticateJWT, commonController.logout);
 
-router.get("/", authenticateJWT, employeeController.getEmployees);
+router.get(
+  "/",
+  authenticateJWT,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const username = req.query.username as string;
+    if (typeof username === "string") {
+      return employeeController.getEmployeesUsername(req, res, next);
+    } else {
+      return commonController.getUsers(req, res, next);
+    }
+  },
+);
 
 router.get(
   "/username/:regex",

@@ -41,9 +41,9 @@
             >CreateTask</a
           >
         </li>
-        <li class="nav-item">
-          <a class="nav-link">Link</a>
-        </li>
+        <!-- <li class="nav-item"> -->
+        <!--   <a class="nav-link">Link</a> -->
+        <!-- </li> -->
         <li class="nav-item dropdown" dropdown>
           <a
             class="nav-link dropdown-toggle"
@@ -59,25 +59,51 @@
 
           <ul class="dropdown-menu" *dropdownMenu>
             <li *ngFor="let filter of filters">
-              <a class="dropdown-item" href="#">{{ filter }}</a>
+              <a
+                class="dropdown-item"
+                href=""
+                (click)="handleFilterBy($event, filter)"
+                >{{ filter }}</a
+              >
             </li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
+        <!-- <li class="nav-item"> -->
+        <!--   <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
+        <!-- </li> -->
       </ul>
 
-      <form class="d-flex" role="search">
+      <!-- <form class="d-flex" role="search"> -->
+      <div>
         <input
           class="form-control me-2"
           type="search"
-          placeholder="Search Task by Title"
+          list="suggestions"
+          [ngModel]="username"
+          placeholder="Search Task by {{
+            this.role === 'admin' ? 'employee' : 'admin'
+          }}"
           aria-label="Search"
+          (ngModelChange)="printTitle($event)"
         />
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-      <button type="button" (click)="logout()">Logout</button>
+        <!-- <select *ngFor="let employee of employeeList"> -->
+        <!--   <option value="{{ employee._id }}">{{ employee.username }}</option> -->
+        <!-- </select> -->
+        <!-- <datalist id="suggestions"> -->
+        <!--   <option *ngFor="let employee of employeeList"> -->
+        <!--     {{ employee.username }} -->
+        <!--   </option> -->
+        <!-- </datalist> -->
+        <!-- <ul *dropdownMenu> -->
+        <!--   <li *ngFor="let employee of employeeList">{{ employee.username }}</li> -->
+        <!-- </ul> -->
+      </div>
+
+      <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+      <!-- </form> -->
+      <button type="button" class="btn btn-outline-success" (click)="logout()">
+        Logout
+      </button>
     </div>
   </div>
 </nav>
