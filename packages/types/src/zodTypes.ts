@@ -17,5 +17,10 @@ export const createTaskTypes = z.object({
   assignedTo: z.string().min(1),
 });
 
+export const updateTaskTypes = z.object({
+  title: z.string().min(4),
+  description: z.string().min(4),
+});
+
 export type loginParams = z.infer<typeof loginTypes>;
 export type signupParams = z.infer<typeof signupTypes>;
