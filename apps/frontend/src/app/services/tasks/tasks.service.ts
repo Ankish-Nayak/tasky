@@ -3,6 +3,8 @@ import { Subject } from 'rxjs';
 import { ITask } from '../../models/task';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.dev';
+import { IStatus } from 'types';
+import { recentFirst } from '../../helpers/sortTasksByRecentFirst';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +32,9 @@ export class TasksService {
       },
     );
   }
+  sortTasks(tasks: ITask[]) {
+    this._tasks.next(tasks);
+  }
   updateTask(title: string, description: string) {
     return this.http.put(
       `${this.baseUrl}/`,
@@ -46,6 +51,18 @@ export class TasksService {
     );
   }
 
+  getTasksByTaskStatus(taskStatus: IStatus) {
+    this.http
+      .get<{ tasks: ITask[] }>(`${this.baseUrl}/?filterBy=${taskStatus}`, {
+        withCredentials: true,
+      })
+      .subscribe((res) => {
+        console.log(res);
+        res.tasks.sort(recentFirst);
+        this._tasks.next(res.tasks);
+      });
+  }
+
   getTasks() {
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {
@@ -53,6 +70,8 @@ export class TasksService {
       })
       .subscribe((res) => {
         console.log(res);
+
+        res.tasks.sort(recentFirst);
         this._tasks.next(res.tasks);
       });
   }

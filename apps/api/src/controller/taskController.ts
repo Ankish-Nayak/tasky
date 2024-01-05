@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Task, User } from "models";
-import { createTaskTypes, updateTaskTypes } from "types";
+import { IStatus, createTaskTypes, updateTaskTypes } from "types";
 export const createTask = async (
   req: Request,
   res: Response,
@@ -216,6 +216,99 @@ export const getTasksByAsssigedByLoggedInEmployeeId = async (
   }
 };
 
+export const getTasksByJwtRoleFilterBy = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const role = req.headers.role as string;
+  const userId = req.headers.userId as string;
+  const filterBy = req.query.filterBy as string;
+  console.log("filterBy", filterBy);
+  try {
+    if (role === "admin") {
+      const tasks = await Task.find({
+        assignedBy: userId,
+        status: filterBy,
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        });
+      res.json({ tasks });
+    } else if (role === "employee") {
+      const tasks = await Task.find({
+        assignedTo: userId,
+        status: filterBy,
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        });
+      res.json({ tasks });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getTasksByJwtRoleFilterByAndSortBy = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const role = req.headers.role as string;
+  const userId = req.headers.userId as string;
+  const filterBy = req.query.filterBy as string;
+  const sortBy = req.query.sortBy as string;
+  const sortValue = sortBy === "recent" ? 1 : -1;
+  console.log("filterBy", filterBy);
+  console.log("sortBy", sortBy);
+  try {
+    if (role === "admin") {
+      const tasks = await Task.find({
+        assignedBy: userId,
+        status: filterBy,
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        })
+        .sort({ createdAt: sortValue });
+      res.json({ tasks });
+    } else if (role === "employee") {
+      const tasks = await Task.find({
+        assignedTo: userId,
+        status: filterBy,
+      })
+        .populate({
+          path: "assignedTo",
+          select: "firstname lastname",
+        })
+        .populate({
+          path: "assignedBy",
+          select: "firstname lastname",
+        })
+        .sort({ createdAt: sortValue });
+      res.json({ tasks });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const getTasksByJwtRole = async (
   req: Request,
   res: Response,
@@ -223,6 +316,7 @@ export const getTasksByJwtRole = async (
 ) => {
   const role = req.headers.role as string;
   const userId = req.headers.userId as string;
+
   try {
     if (role === "admin") {
       const tasks = await Task.find({

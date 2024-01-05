@@ -9,23 +9,23 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AuthService } from '../../services/auth/auth.service';
 import { RootService } from '../../services/root/root.service';
 
-import { IFilter } from '../../models/task';
-import { FiltersService } from '../../services/tasks/filters/filters.service';
-import { EmployeesService } from '../../services/employees/employees.service';
 import { IEmployee } from '../../models/employee';
 import { INavLink } from '../../models/navLink';
+import { IFilter, ISort } from '../../models/task';
+import { EmployeesService } from '../../services/employees/employees.service';
+import { FiltersService } from '../../services/tasks/filters/filters.service';
+import { SortsService } from '../../services/tasks/sorts/sorts.service';
 
-// FIX: filterBy based on status.
 // FIX: Search by with autosuggestions.
 // TODO: add modal of profile pic when clicked on card text link.
 // TODO: add search bar for searching employees whlile assingning task.
 // TODO: make admin to assign particular task to multiple employees.
-// TODO: update task method.
+// TODO: make sortBy work from backend to frontend.
 
 @Injectable()
 @Component({
@@ -99,6 +99,7 @@ export class NavbarComponent implements OnInit {
     private employeeService: EmployeesService,
     private route: ActivatedRoute,
     private location: Location,
+    private sortByService: SortsService,
   ) {}
   printTitle(title: string) {
     console.log(title);
@@ -145,10 +146,7 @@ export class NavbarComponent implements OnInit {
   handleFilterBy(e: MouseEvent, filter: IFilter) {
     e.preventDefault();
     console.log(filter);
-    if (filter === 'all') {
-    } else {
-      this.updateFilterBy(filter);
-    }
+    this.updateFilterBy(filter);
   }
   ngOnInit() {
     console.log(this.location);
@@ -206,11 +204,15 @@ export class NavbarComponent implements OnInit {
       this.filters = ['pending', 'done', 'progress', 'approved', 'all'];
     }
   }
+  updateSortBy(sortBy: ISort) {
+    this.sortByService.updateFilter(sortBy);
+  }
   updateFilterBy(selectedFilter: IFilter) {
     this.filtersService.updateFilter(selectedFilter);
   }
   async logout() {
     this.router.navigate(['']);
+    this.filtersService.resetFilter();
     this.authService.logout();
   }
   onSubmit() {

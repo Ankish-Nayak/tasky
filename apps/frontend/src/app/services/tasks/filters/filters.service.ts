@@ -12,10 +12,10 @@ export class FiltersService {
   get filter() {
     return this._filterSource.value;
   }
-  set filter(updatedFilter: IFilter) {
-    this._filterSource.next(updatedFilter);
-  }
   updateFilter(updatedFilter: IFilter) {
     this._filterSource.next(updatedFilter);
+  }
+  resetFilter() {
+    this._filterSource.next(null);
   }
 }

@@ -82,6 +82,34 @@
             </li>
           </ul>
         </li>
+
+        <li class="nav-item dropdown" dropdown *ngIf="isLanding()">
+          <a
+            class="nav-link dropdown-toggle cursor-pointer"
+            (click)="$event.preventDefault()"
+            role="button"
+            dropdownToggle
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            sortByDate
+          </a>
+
+          <ul class="dropdown-menu" *dropdownMenu>
+            <li>
+              <a
+                class="dropdown-item cursor-pointer"
+                (click)="updateSortBy('recent')"
+                >Recent First</a
+              >
+              <a
+                class="dropdown-item cursor-pointer"
+                (click)="updateSortBy('oldest')"
+                >Oldest First</a
+              >
+            </li>
+          </ul>
+        </li>
         <!-- <li class="nav-item"> -->
         <!--   <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
         <!-- </li> -->

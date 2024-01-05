@@ -14,19 +14,25 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     const assingedTo = req.query.assingedTo;
     const assignedBy = req.query.assignedBy;
-
+    const filterBy = req.query.filterBy as string;
+    const sortBy = req.query.sortBy as string;
+    console.log(filterBy);
+    let status: string | null = null;
+    let sort: string | null = null;
+    if (["pending", "done", "approved", "progress"].includes(filterBy)) {
+      console.log("dondone");
+      status = filterBy;
+    }
+    if (["recent", "oldest"].includes(sortBy)) {
+      sort = sortBy;
+    }
     if (typeof assignedBy === "string") {
       return taskController.getTasksByAssignedByAdminId(req, res, next);
     } else if (typeof assingedTo === "string") {
       return taskController.getTasksByAssignedToByEmployeeId(req, res, next);
+    } else if (status !== null) {
+      return taskController.getTasksByJwtRoleFilterBy(req, res, next);
     } else {
-      // const role = req.headers.role as string;
-      // if (role === "admin") {
-      //   console.log("hit");
-      //   return taskController.getTasksByAssignedByAdminId(req, res, next);
-      // } else if (role === "employee") {
-      //   return taskController.getTasksByAssignedToByEmployeeId(req, res, next);
-      // }
       return taskController.getTasksByJwtRole(req, res, next);
     }
   },

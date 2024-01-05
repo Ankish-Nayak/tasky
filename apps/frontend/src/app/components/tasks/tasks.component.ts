@@ -5,6 +5,8 @@ import { ITask } from '../../models/task';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { TaskComponent } from './task/task.component';
+import { SortsService } from '../../services/tasks/sorts/sorts.service';
+import { oldestFirst, recentFirst } from '../../helpers/sortTasksByRecentFirst';
 
 export const priority = () => {};
 const statusOrder = ['pending', 'progress', 'done', 'approved'];
@@ -24,12 +26,13 @@ export class TasksComponent implements OnInit {
     private tasksService: TasksService,
     private filtersService: FiltersService,
     private modalService: BsModalService,
+    private sortBy: SortsService,
   ) {}
   ngOnInit(): void {
     this.tasksService.getTasks();
     this.tasksService.tasksSource$.subscribe((res) => {
       this.tasks = res;
-      this.filteredTask = this.tasks;
+      // this.filteredTask = this.tasks;
       console.log(res);
     });
     this.tasks.sort(
@@ -37,13 +40,24 @@ export class TasksComponent implements OnInit {
     );
     this.filtersService.filterMessage$.subscribe((res) => {
       if (res === 'all' || res === null) {
-        this.filteredTask = this.tasks.filter((task) => task.status.length > 0);
+        this.tasksService.getTasks();
+        // this.filteredTask = this.tasks.filter((task) => task.status.length > 0);
       } else if (res === 'approve') {
-        this.filteredTask = this.tasks.filter((task) => task.status === 'done');
+        this.tasksService.getTasksByTaskStatus('done');
+        // this.filteredTask = this.tasks.filter((task) => task.status === 'done');
       } else {
-        this.filteredTask = this.tasks.filter((task) => task.status === res);
+        this.tasksService.getTasksByTaskStatus(res);
+        // this.filteredTask = this.tasks.filter((task) => task.status === res);
       }
       console.log(this.tasks, this.filteredTask);
+    });
+    this.sortBy.sortMessage$.subscribe((res) => {
+      if (res === 'recent') {
+        this.tasks.sort(recentFirst);
+      } else {
+        this.tasks.sort(oldestFirst);
+      }
+      this.tasksService.sortTasks(this.tasks);
     });
   }
   openModal(template: TemplateRef<void>) {

@@ -17,6 +17,8 @@ export interface ITask {
   };
 }
 
+export type ISort = 'recent' | 'oldest';
+
 export type IFilter =
   | 'pending'
   | 'done'
