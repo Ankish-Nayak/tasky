@@ -31,7 +31,7 @@ import { TasksService } from '../../services/tasks/tasks.service';
 
 // FIX: Search by with autosuggestions.
 // TODO: add modal of profile pic when clicked on card text link.
-// TODO: add search bar for searching employees whlile assingning task.
+// TODO: add search bar for searching employees while assingning task.
 // TODO: make admin to assign particular task to multiple employees.
 // TODO: make sortBy work from backend to frontend.
 // TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
