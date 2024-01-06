@@ -22,5 +22,10 @@ export const updateTaskTypes = z.object({
   description: z.string().min(4),
 });
 
+export const isTittleTakenTypes = z.object({
+  title: z.string(),
+});
+
 export type loginParams = z.infer<typeof loginTypes>;
 export type signupParams = z.infer<typeof signupTypes>;
+export type isTittleTakenParams = z.infer<typeof isTittleTakenTypes>;
