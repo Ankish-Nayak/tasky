@@ -15,7 +15,7 @@ export class SortsService {
   updateFilter(updatedFilter: ISort) {
     this._sortSource.next(updatedFilter);
   }
-  resetFilter() {
+  resetSortBy() {
     this._sortSource.next('recent');
   }
 }

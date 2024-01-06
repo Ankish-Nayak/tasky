@@ -4,7 +4,7 @@ export interface ITask {
   description: string;
   status: 'pending' | 'progress' | 'done' | 'approved';
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   assignedTo: {
     _id: string;
     firstname: string;
@@ -24,6 +24,5 @@ export type IFilter =
   | 'done'
   | 'progress'
   | 'approved'
-  | null
   | 'approve'
   | 'all';

@@ -16,6 +16,6 @@ export class FiltersService {
     this._filterSource.next(updatedFilter);
   }
   resetFilter() {
-    this._filterSource.next(null);
+    this._filterSource.next('all');
   }
 }

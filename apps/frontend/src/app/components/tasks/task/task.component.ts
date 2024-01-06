@@ -28,6 +28,9 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.role);
     this.task.createdAt = humanReadableDate(this.task.createdAt);
+    if (typeof this.task.updatedAt !== 'undefined') {
+      this.task.updatedAt = humanReadableDate(this.task.updatedAt);
+    }
     this.authService.userMessage$.subscribe((message) => {
       const { role } = message;
       this.role = message.role;
@@ -45,6 +48,9 @@ export class TaskComponent implements OnInit {
         }
       }
     });
+  }
+  isUpdatedAt() {
+    return typeof this.task.updatedAt !== 'undefined';
   }
   navigateToUpdateTask() {
     this.router.navigate(['/updateTask']);

@@ -1,20 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ISort, ITask } from '../../models/task';
+import { IFilter, ISort, ITask } from '../../models/task';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.dev';
 import { IStatus } from 'types';
 import { oldestFirst, recentFirst } from '../../helpers/sortTasksByRecentFirst';
+import { FiltersService } from './filters/filters.service';
+import { SortsService } from './sorts/sorts.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TasksService {
+export class TasksService implements OnInit {
   private baseUrl = `${environment.apiUrl}/tasks`;
   private _tasks = new Subject<ITask[]>();
   tasksSource$ = this._tasks.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private filtersService: FiltersService,
+    private sortByService: SortsService,
+  ) {}
 
   createTask(title: string, description: string, assignedTo: string) {
     return this.http.post(
@@ -31,6 +37,9 @@ export class TasksService {
         },
       },
     );
+  }
+  ngOnInit(): void {
+    this.sortByService.sortMessage$.subscribe((res) => {});
   }
   sortTasks(tasks: ITask[]) {
     this._tasks.next(tasks);
@@ -67,7 +76,8 @@ export class TasksService {
       });
   }
 
-  getTasks(sorts?: ISort) {
+  getTasks(sorts?: ISort, filterBy?: IFilter) {
+    const filteringStatus: IStatus | 'all' = 'all';
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {
         withCredentials: true,
@@ -79,7 +89,13 @@ export class TasksService {
         } else {
           res.tasks.sort(oldestFirst);
         }
-        this._tasks.next(res.tasks);
+        if (filteringStatus === 'all') {
+          this._tasks.next(res.tasks);
+        } else {
+          this._tasks.next(
+            res.tasks.filter((task) => task.status === filteringStatus),
+          );
+        }
       });
   }
 

@@ -40,12 +40,15 @@ export class TasksComponent implements OnInit {
     );
     this.filtersService.filterMessage$.subscribe((res) => {
       if (res === 'all' || res === null) {
-        this.tasksService.getTasks();
+        this.tasksService.getTasks(this.sortBy.filter, 'all');
+        // this.tasksService.getTasksByTaskStatus('all');
         // this.filteredTask = this.tasks.filter((task) => task.status.length > 0);
       } else if (res === 'approve') {
+        // this.tasksService.getTasks(this.sortBy.filter, 'done');
         this.tasksService.getTasksByTaskStatus('done');
         // this.filteredTask = this.tasks.filter((task) => task.status === 'done');
       } else {
+        // this.tasksService.getTasks(this.sortBy.filter, res);
         this.tasksService.getTasksByTaskStatus(res);
         // this.filteredTask = this.tasks.filter((task) => task.status === res);
       }

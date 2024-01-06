@@ -34,6 +34,7 @@ import { TasksService } from '../../services/tasks/tasks.service';
 // TODO: add search bar for searching employees whlile assingning task.
 // TODO: make admin to assign particular task to multiple employees.
 // TODO: make sortBy work from backend to frontend.
+// TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
 
 @Injectable()
 @Component({
@@ -64,7 +65,7 @@ export class NavbarComponent implements OnInit {
   employeeNavLinks: INavLink[] = employeeNavLinks;
   role: 'admin' | 'employee' = 'admin';
   filters: IFilter[] = [];
-  selectedFilter: IFilter = null;
+  selectedFilter: IFilter = 'all';
   loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -116,6 +117,11 @@ export class NavbarComponent implements OnInit {
       this.router.navigate([this.navLinks[x].navigateTo]);
     }
   }
+  reset(event: MouseEvent) {
+    event.preventDefault();
+    this.filtersService.resetFilter();
+    this.sortByService.resetSortBy();
+  }
   navigateToHome(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/']);
@@ -135,6 +141,9 @@ export class NavbarComponent implements OnInit {
   handleFilterBy(e: MouseEvent, filter: IFilter) {
     e.preventDefault();
     this.updateFilterBy(filter);
+  }
+  renderReset() {
+    return this._selectedSortBy !== 'recent' || this.selectedFilter !== 'all';
   }
   ngOnInit() {
     this.router.events.subscribe((res) => {

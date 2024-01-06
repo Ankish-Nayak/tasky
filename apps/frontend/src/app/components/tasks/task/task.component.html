@@ -7,7 +7,11 @@
       <!---->
       <a href="#" class="card-link">{{ getCardText() }}</a>
     </p>
-    <p class="card-text">AssignedOn: {{ task.createdAt }}</p>
+    <p class="card-text">assignedAt: {{ task.createdAt }}</p>
+
+    <p class="card-text" *ngIf="isUpdatedAt()">
+      updatedAt: {{ task.updatedAt }}
+    </p>
     <p>
       Status: <strong>{{ task.status }}</strong>
     </p>
