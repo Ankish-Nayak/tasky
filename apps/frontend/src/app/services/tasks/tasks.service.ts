@@ -44,9 +44,9 @@ export class TasksService implements OnInit {
   sortTasks(tasks: ITask[]) {
     this._tasks.next(tasks);
   }
-  updateTask(title: string, description: string) {
+  updateTask(taskId: string, title: string, description: string) {
     return this.http.put(
-      `${this.baseUrl}/`,
+      `${this.baseUrl}/${taskId}`,
       {
         title,
         description,
@@ -124,6 +124,20 @@ export class TasksService implements OnInit {
       },
     );
   }
+  isTaskTitleTakenUpdate(title: string, taskId: string) {
+    return this.http.post<{ titleTaken: boolean }>(
+      `${this.baseUrl}/title-taken/?taskId=${taskId}`,
+      {
+        title,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }
   markAsApproved(taskId: string) {
     return this.http.put<{ id: string }>(
       `${this.baseUrl}/${taskId}/mark-as-approved`,
@@ -152,12 +166,12 @@ export class TasksService implements OnInit {
     );
   }
   getTask(taskId: string) {
-    return this.http.get<ITask>(`${this.baseUrl}/${taskId}`, {
+    return this.http.get<{ task: ITask }>(`${this.baseUrl}/${taskId}`, {
       withCredentials: true,
     });
   }
   deleteTask(taskId: string) {
-    return this.http.delete<ITask>(`${this.baseUrl}/${taskId}`, {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${taskId}`, {
       withCredentials: true,
     });
   }

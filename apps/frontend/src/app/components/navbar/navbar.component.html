@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn.value">
   <div class="container-fluid d-flex justify-content-between">
     <a class="navbar-brand" href="" (click)="navigateToHome($event)">
-      <p class="h1 cursor-pointer" tooltip="heafe">Tasky</p>
+      <p class="h1 cursor-pointer">Tasky</p>
     </a>
 
     <!-- <p class="h1 cursor-pointer">Tasky</p> -->
@@ -103,6 +103,7 @@
                 (click)="updateSortBy('recent')"
                 >Recent First</a
               >
+              l
               <a
                 class="dropdown-item cursor-pointer"
                 (click)="updateSortBy('oldest')"
@@ -112,11 +113,15 @@
           </ul>
         </li>
 
-        <li class="{{ renderReset() ? 'nav-item' : 'nav-item hidden' }}">
+        <li
+          class="{{ renderReset() ? 'nav-item' : 'nav-item hidden' }}"
+          *ngIf="isLanding()"
+        >
           <a
             class="nav-link cursor-pointer"
             (click)="reset($event)"
             role="button"
+            tooltip="Reset filters and sortBy"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >

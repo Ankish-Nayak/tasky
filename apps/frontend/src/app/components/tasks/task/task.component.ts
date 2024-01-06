@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 export class TaskComponent implements OnInit {
   @Input() task: ITask;
   role: 'admin' | 'employee' = 'admin';
-  message: 'start' | 'done' | 'approve' | 'approved' = 'approved';
+  message: 'start' | 'done' | 'approve' | 'approved' | 'progress' = 'approved';
   constructor(
     private authService: AuthService,
     private taskService: TasksService,
@@ -53,7 +53,7 @@ export class TaskComponent implements OnInit {
     return typeof this.task.updatedAt !== 'undefined';
   }
   navigateToUpdateTask() {
-    this.router.navigate(['/updateTask']);
+    this.router.navigate(['/updateTask', this.task._id]);
   }
   getAdminCardText() {
     return this.task.assignedTo.firstname;
@@ -73,7 +73,8 @@ export class TaskComponent implements OnInit {
     return this.message;
   }
 
-  handleTask() {
+  handleTask(event: MouseEvent) {
+    event.preventDefault();
     console.log(this.message, this.role);
     switch (this.message) {
       case 'start': {
@@ -111,7 +112,7 @@ export class TaskComponent implements OnInit {
     if (this.role === 'employee') {
       this.taskService.markAsProgress(this.task._id).subscribe((res) => {
         this.message = 'done';
-        this.task.status = 'done';
+        this.task.status = 'progress';
         console.log(res);
       });
     }
@@ -127,7 +128,7 @@ export class TaskComponent implements OnInit {
   done() {
     if (this.role === 'employee') {
       this.taskService.markAsDone(this.task._id).subscribe(() => {
-        this.message = 'approve';
+        this.message = 'done';
         this.task.status = 'done';
       });
     } else {

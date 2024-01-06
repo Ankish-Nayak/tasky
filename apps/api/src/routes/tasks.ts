@@ -38,12 +38,18 @@ router.get(
   },
 );
 
-router.post("/title-taken", authenticateJWT, taskController.isTitleTaken);
-
-router.put("/:taskId", authenticateJWT, taskController.updateTaskById);
-router.get("/:taskId", authenticateJWT, taskController.getTaskById);
-
-router.delete("/:taskId", authenticateJWT, taskController.deleteTask);
+router.post(
+  "/title-taken",
+  authenticateJWT,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const taskId = req.query.taskId;
+    if (typeof taskId === "string") {
+      return taskController.isTitleTakenUpdate(req, res, next);
+    } else {
+      return taskController.isTitleTaken(req, res, next);
+    }
+  },
+);
 
 router.put(
   "/:taskId/mark-as-approved",
@@ -58,3 +64,7 @@ router.put(
 );
 
 router.put("/:taskId/mark-as-done", authenticateJWT, taskController.doneTask);
+router.get("/:taskId", authenticateJWT, taskController.getTaskById);
+router.delete("/:taskId", authenticateJWT, taskController.deleteTask);
+
+router.put("/:taskId", authenticateJWT, taskController.updateTaskById);

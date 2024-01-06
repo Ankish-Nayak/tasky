@@ -35,6 +35,7 @@ import { TasksService } from '../../services/tasks/tasks.service';
 // TODO: make admin to assign particular task to multiple employees.
 // TODO: make sortBy work from backend to frontend.
 // TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
+// TODO: let admin to update task when status is done and push back it to pending state.
 
 @Injectable()
 @Component({
@@ -110,6 +111,9 @@ export class NavbarComponent implements OnInit {
   }
   handleNavigateTo(event: MouseEvent, name: string) {
     event.preventDefault();
+    if (name === 'Tasks') {
+      this.reset(event);
+    }
     this.navLinks.forEach((navLink) => (navLink.isActive = false));
     const x = this.navLinks.findIndex((navlink) => navlink.name === name);
     if (x >= 0) {
@@ -125,6 +129,7 @@ export class NavbarComponent implements OnInit {
   navigateToHome(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/']);
+    this.reset(event);
   }
   navigateToLogin(event: MouseEvent) {
     event.preventDefault();
@@ -146,21 +151,22 @@ export class NavbarComponent implements OnInit {
     return this._selectedSortBy !== 'recent' || this.selectedFilter !== 'all';
   }
   ngOnInit() {
-    this.router.events.subscribe((res) => {
-      if (res instanceof NavigationEnd) {
-        if (
-          this.role === 'admin' &&
-          !adminAllowedRoutes.includes(res.url.split('/').reverse()[0])
-        ) {
-          this.router.navigate(['']);
-        } else if (
-          this.role === 'employee' &&
-          !employeeAllowedRoutes.includes(res.url.split('/').reverse()[0])
-        ) {
-          this.router.navigate(['']);
-        }
-      }
-    });
+    // this.router.events.subscribe((res) => {
+    //   if (res instanceof NavigationEnd) {
+    //     if (
+    //       this.role === 'admin' &&
+    //       !adminAllowedRoutes.includes(res.url.split('/').reverse()[0]) &&
+    //       !res.url.split('/').reverse()[0].startsWith('updateTask')
+    //     ) {
+    //       this.router.navigate(['']);
+    //     } else if (
+    //       this.role === 'employee' &&
+    //       !employeeAllowedRoutes.includes(res.url.split('/').reverse()[0])
+    //     ) {
+    //       this.router.navigate(['']);
+    //     }
+    //   }
+    // });
     this.isLoggedIn = {
       isLoading: false,
       value: this.authService.getIsLoggedIn(),

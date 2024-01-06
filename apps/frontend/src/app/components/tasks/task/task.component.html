@@ -24,7 +24,7 @@
         href="#"
         class="btn btn-sm btn-primary"
         *ngIf="isAdmin() && this.message !== 'approved'"
-        (click)="handleTask()"
+        (click)="handleTask($event)"
         >{{ getMessage() }}</a
       >
       <a
@@ -42,8 +42,8 @@
         href="#"
         class="btn btn-sm btn-primary disabled"
         *ngIf="isAdmin() && this.task.status === 'approved'"
-        (click)="handleTask()"
-        >{{ getMessage() }}</a
+        (click)="handleTask($event)"
+        >{{ this.message }}</a
       >
     </div>
     <div class="d-flex container-fluid justify-content-between">
@@ -55,7 +55,7 @@
           this.task.status !== 'approved' &&
           this.task.status !== 'done'
         "
-        (click)="handleTask()"
+        (click)="handleTask($event)"
         >{{ getMessage() }}</a
       >
 

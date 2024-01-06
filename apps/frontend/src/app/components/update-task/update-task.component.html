@@ -44,13 +44,27 @@
         <!--     {{ employee.firstname }} {{ employee.lastname }} -->
         <!--   </option> -->
         <!-- </select> -->
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="this.buttonDisabled"
-        >
-          UpdateTask
-        </button>
+        <div class="d-flex justify-content-around container-fluid">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="this.buttonDisabled"
+          >
+            UpdateTask
+          </button>
+          <button type="button" class="btn btn-primary" (click)="resetTask()">
+            Reset
+          </button>
+
+          <button
+            *ngIf="task.status !== 'approved'"
+            type="button"
+            class="btn btn-primary"
+            (click)="deleteTask()"
+          >
+            delete
+          </button>
+        </div>
       </form>
     </div>
   </div>
