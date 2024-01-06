@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ITask } from '../../models/task';
+import { ISort, ITask } from '../../models/task';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.dev';
 import { IStatus } from 'types';
-import { recentFirst } from '../../helpers/sortTasksByRecentFirst';
+import { oldestFirst, recentFirst } from '../../helpers/sortTasksByRecentFirst';
 
 @Injectable({
   providedIn: 'root',
@@ -51,27 +51,34 @@ export class TasksService {
     );
   }
 
-  getTasksByTaskStatus(taskStatus: IStatus) {
+  getTasksByTaskStatus(taskStatus: IStatus, sorts?: ISort) {
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/?filterBy=${taskStatus}`, {
         withCredentials: true,
       })
       .subscribe((res) => {
         console.log(res);
-        res.tasks.sort(recentFirst);
+        if (typeof sorts === 'undefined' || sorts === 'recent') {
+          res.tasks.sort(recentFirst);
+        } else {
+          res.tasks.sort(oldestFirst);
+        }
         this._tasks.next(res.tasks);
       });
   }
 
-  getTasks() {
+  getTasks(sorts?: ISort) {
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {
         withCredentials: true,
       })
       .subscribe((res) => {
         console.log(res);
-
-        res.tasks.sort(recentFirst);
+        if (typeof sorts === 'undefined' || sorts === 'recent') {
+          res.tasks.sort(recentFirst);
+        } else {
+          res.tasks.sort(oldestFirst);
+        }
         this._tasks.next(res.tasks);
       });
   }

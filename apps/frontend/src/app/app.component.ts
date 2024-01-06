@@ -22,6 +22,7 @@ import { AuthService } from './services/auth/auth.service';
 })
 export class AppComponent implements OnInit {
   title = 'tasky';
+  currentPath: string = '';
   constructor(private authService: AuthService) {}
   ngOnInit(): void {
     this.authService.me();

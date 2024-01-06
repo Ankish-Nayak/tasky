@@ -5,6 +5,7 @@ import { RootService } from '../../services/root/root.service';
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
 import { TasksComponent } from '../tasks/tasks.component';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 
 @Injectable()
 @Component({
@@ -17,9 +18,11 @@ import { TasksComponent } from '../tasks/tasks.component';
 export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
   pageRender: 'signup' | 'login' = 'login';
+  currentPath: string = '';
   constructor(
     private authService: AuthService,
     private rootService: RootService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {

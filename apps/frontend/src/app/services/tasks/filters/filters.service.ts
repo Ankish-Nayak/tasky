@@ -6,7 +6,7 @@ import { IFilter } from '../../../models/task';
   providedIn: 'root',
 })
 export class FiltersService {
-  private _filterSource = new BehaviorSubject<IFilter>(null);
+  private _filterSource = new BehaviorSubject<IFilter>('all');
   filterMessage$ = this._filterSource.asObservable();
   constructor() {}
   get filter() {

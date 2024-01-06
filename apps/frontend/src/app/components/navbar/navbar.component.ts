@@ -6,7 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -14,12 +14,20 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AuthService } from '../../services/auth/auth.service';
 import { RootService } from '../../services/root/root.service';
 
+import { adminNavLinks, employeeNavLinks } from '../../helpers/navLinks';
+
+import {
+  adminAllowedRoutes,
+  employeeAllowedRoutes,
+} from '../../helpers/allowedRoutes';
+import { capitalizeFirstLetter } from '../../helpers/captitalize';
 import { IEmployee } from '../../models/employee';
 import { INavLink } from '../../models/navLink';
 import { IFilter, ISort } from '../../models/task';
 import { EmployeesService } from '../../services/employees/employees.service';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { SortsService } from '../../services/tasks/sorts/sorts.service';
+import { TasksService } from '../../services/tasks/tasks.service';
 
 // FIX: Search by with autosuggestions.
 // TODO: add modal of profile pic when clicked on card text link.
@@ -52,29 +60,8 @@ export class NavbarComponent implements OnInit {
   };
 
   navLinks: INavLink[] = [];
-  adminNavLinks: INavLink[] = [
-    {
-      navigateTo: '/createTask',
-      name: 'Create Task',
-      class: 'nav-link',
-      isActive: false,
-    },
-    {
-      navigateTo: '',
-      name: 'Tasks',
-      class: 'nav-link',
-      isActive: false,
-    },
-  ];
-
-  employeeNavLinks: INavLink[] = [
-    {
-      navigateTo: '',
-      name: 'Tasks',
-      class: 'nav-link',
-      isActive: false,
-    },
-  ];
+  adminNavLinks: INavLink[] = adminNavLinks;
+  employeeNavLinks: INavLink[] = employeeNavLinks;
   role: 'admin' | 'employee' = 'admin';
   filters: IFilter[] = [];
   selectedFilter: IFilter = null;
@@ -91,15 +78,17 @@ export class NavbarComponent implements OnInit {
       username: 'ankish@gmail.com',
     },
   ];
+  currentPath: string = '';
+  private _selectedSortBy: ISort = 'recent';
   constructor(
     private router: Router,
     private authService: AuthService,
     private rootService: RootService,
     private filtersService: FiltersService,
     private employeeService: EmployeesService,
-    private route: ActivatedRoute,
     private location: Location,
     private sortByService: SortsService,
+    private tasks: TasksService,
   ) {}
   printTitle(title: string) {
     console.log(title);
@@ -145,15 +134,24 @@ export class NavbarComponent implements OnInit {
   }
   handleFilterBy(e: MouseEvent, filter: IFilter) {
     e.preventDefault();
-    console.log(filter);
     this.updateFilterBy(filter);
   }
   ngOnInit() {
-    console.log(this.location);
-
-    console.log(this.route);
-    //
-    // console.log(this.route._routerState.url);
+    this.router.events.subscribe((res) => {
+      if (res instanceof NavigationEnd) {
+        if (
+          this.role === 'admin' &&
+          !adminAllowedRoutes.includes(res.url.split('/').reverse()[0])
+        ) {
+          this.router.navigate(['']);
+        } else if (
+          this.role === 'employee' &&
+          !employeeAllowedRoutes.includes(res.url.split('/').reverse()[0])
+        ) {
+          this.router.navigate(['']);
+        }
+      }
+    });
     this.isLoggedIn = {
       isLoading: false,
       value: this.authService.getIsLoggedIn(),
@@ -195,10 +193,19 @@ export class NavbarComponent implements OnInit {
         this.isLoggedIn.isLoading = false;
       },
     );
+    this.sortByService.sortMessage$.subscribe((res) => {
+      this._selectedSortBy = res;
+      this.tasks.getTasks(res);
+    });
+  }
+  get selectedSortBy(): string {
+    return capitalizeFirstLetter(this._selectedSortBy);
+  }
+  set selectedSortBy(updatedSortBy: ISort) {
+    this._selectedSortBy = updatedSortBy;
   }
   roleBasedFilterBy(role: 'admin' | 'employee') {
     if (role === 'admin') {
-      console.log('dfadfd');
       this.filters = ['approve', 'approved', 'all'];
     } else {
       this.filters = ['pending', 'done', 'progress', 'approved', 'all'];
