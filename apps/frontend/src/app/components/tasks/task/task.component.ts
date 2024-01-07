@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { ITask } from '../../../models/task';
+import { Router } from '@angular/router';
 import humanReadableDate from '../../../helpers/HumanReadableDate';
+import { ITask } from '../../../models/task';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TasksService } from '../../../services/tasks/tasks.service';
-import { Router } from '@angular/router';
 
 @Injectable()
 @Component({

@@ -60,7 +60,7 @@ export class TasksService implements OnInit {
     );
   }
 
-  getTasksByTaskStatus(taskStatus: IStatus, sorts?: ISort) {
+  getTasks(taskStatus: IStatus | 'all', sorts?: ISort) {
     this.http
       .get<{ tasks: ITask[] }>(`${this.baseUrl}/?filterBy=${taskStatus}`, {
         withCredentials: true,
@@ -76,28 +76,28 @@ export class TasksService implements OnInit {
       });
   }
 
-  getTasks(sorts?: ISort, filterBy?: IFilter) {
-    const filteringStatus: IStatus | 'all' = 'all';
-    this.http
-      .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {
-        withCredentials: true,
-      })
-      .subscribe((res) => {
-        console.log(res);
-        if (typeof sorts === 'undefined' || sorts === 'recent') {
-          res.tasks.sort(recentFirst);
-        } else {
-          res.tasks.sort(oldestFirst);
-        }
-        if (filteringStatus === 'all') {
-          this._tasks.next(res.tasks);
-        } else {
-          this._tasks.next(
-            res.tasks.filter((task) => task.status === filteringStatus),
-          );
-        }
-      });
-  }
+  // getTasks(sorts?: ISort, filterBy?: IFilter) {
+  //   const filteringStatus: IStatus | 'all' = 'all';
+  //   this.http
+  //     .get<{ tasks: ITask[] }>(`${this.baseUrl}/`, {
+  //       withCredentials: true,
+  //     })
+  //     .subscribe((res) => {
+  //       console.log(res);
+  //       if (typeof sorts === 'undefined' || sorts === 'recent') {
+  //         res.tasks.sort(recentFirst);
+  //       } else {
+  //         res.tasks.sort(oldestFirst);
+  //       }
+  //       if (filteringStatus === 'all') {
+  //         this._tasks.next(res.tasks);
+  //       } else {
+  //         this._tasks.next(
+  //           res.tasks.filter((task) => task.status === filteringStatus),
+  //         );
+  //       }
+  //     });
+  // }
 
   getTaskByUsername(username: string) {
     this.http

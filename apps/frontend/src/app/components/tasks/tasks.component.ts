@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { IStatus } from 'types';
 import { ITask } from '../../models/task';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
+import { SortsService } from '../../services/tasks/sorts/sorts.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { TaskComponent } from './task/task.component';
-import { SortsService } from '../../services/tasks/sorts/sorts.service';
-import { oldestFirst, recentFirst } from '../../helpers/sortTasksByRecentFirst';
 
 export const priority = () => {};
 const statusOrder = ['pending', 'progress', 'done', 'approved'];
@@ -29,10 +29,9 @@ export class TasksComponent implements OnInit {
     private sortBy: SortsService,
   ) {}
   ngOnInit(): void {
-    this.tasksService.getTasks();
+    this.tasksService.getTasks('all');
     this.tasksService.tasksSource$.subscribe((res) => {
       this.tasks = res;
-      // this.filteredTask = this.tasks;
       console.log(res);
     });
     this.tasks.sort(
@@ -40,27 +39,23 @@ export class TasksComponent implements OnInit {
     );
     this.filtersService.filterMessage$.subscribe((res) => {
       if (res === 'all' || res === null) {
-        this.tasksService.getTasks(this.sortBy.filter, 'all');
-        // this.tasksService.getTasksByTaskStatus('all');
-        // this.filteredTask = this.tasks.filter((task) => task.status.length > 0);
+        this.tasksService.getTasks('all', this.sortBy.filter);
       } else if (res === 'approve') {
-        // this.tasksService.getTasks(this.sortBy.filter, 'done');
-        this.tasksService.getTasksByTaskStatus('done');
-        // this.filteredTask = this.tasks.filter((task) => task.status === 'done');
+        this.tasksService.getTasks('done', this.sortBy.filter);
       } else {
-        // this.tasksService.getTasks(this.sortBy.filter, res);
-        this.tasksService.getTasksByTaskStatus(res);
-        // this.filteredTask = this.tasks.filter((task) => task.status === res);
+        this.tasksService.getTasks(res, this.sortBy.filter);
       }
       console.log(this.tasks, this.filteredTask);
     });
     this.sortBy.sortMessage$.subscribe((res) => {
-      if (res === 'recent') {
-        this.tasks.sort(recentFirst);
+      const filter = this.filtersService.filter;
+      let status: IStatus | 'all' = 'all';
+      if (filter === 'approve') {
+        status = 'done';
       } else {
-        this.tasks.sort(oldestFirst);
+        status = filter;
       }
-      this.tasksService.sortTasks(this.tasks);
+      this.tasksService.getTasks(status, res);
     });
   }
   openModal(template: TemplateRef<void>) {

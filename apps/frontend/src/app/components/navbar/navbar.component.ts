@@ -33,7 +33,6 @@ import { TasksService } from '../../services/tasks/tasks.service';
 // TODO: add modal of profile pic when clicked on card text link.
 // TODO: add search bar for searching employees while assingning task.
 // TODO: make admin to assign particular task to multiple employees.
-// TODO: make sortBy work from backend to frontend.
 // TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
 // TODO: let admin to update task when status is done and push back it to pending state.
 
@@ -90,7 +89,7 @@ export class NavbarComponent implements OnInit {
     private employeeService: EmployeesService,
     private location: Location,
     private sortByService: SortsService,
-    private tasks: TasksService,
+    // private tasks: TasksService,
   ) {}
   printTitle(title: string) {
     console.log(title);
@@ -210,7 +209,7 @@ export class NavbarComponent implements OnInit {
     );
     this.sortByService.sortMessage$.subscribe((res) => {
       this._selectedSortBy = res;
-      this.tasks.getTasks(res);
+      // this.tasks.getTasks(res);
     });
   }
   get selectedSortBy(): string {
