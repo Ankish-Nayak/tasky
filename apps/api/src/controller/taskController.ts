@@ -378,68 +378,38 @@ export const updateTaskById = async (
 
     const existingTask = await Task.findById(taskId);
     const task = await Task.findOne({ title });
-    let titleTaken = false;
     if (!existingTask) {
-      return res.status(404).json({ message: "Task dose not exists" });
+      return res.status(404).json({ message: "task dose not exists" });
     }
-    if (existingTask.status === "approved" || existingTask.status === "done") {
-      return res
-        .status(400)
-        .json({ message: `Task already in ${existingTask.status}state` });
+    if (existingTask.status === "approved") {
+      return res.status(400).json({ message: "task is already approved" });
     }
-    if (!task) {
-      if (existingTask.assignedBy.toString() === userId) {
-        const updatedTask = await Task.findByIdAndUpdate(
-          taskId,
-          {
-            title,
-            description,
-            updatedAt: new Date(),
-          },
-          {
-            new: true,
-          },
-        );
-        if (updatedTask) {
-          return res.json({ updatedTask });
-        } else {
-          return res.status(400).json({ message: "bad title or description" });
-        }
-      } else {
-        return res.status(400).json({ message: "admin can only update task" });
-      }
+    if (existingTask.assignedBy.toString() !== userId) {
+      return res.status(400).json({ message: "admin can only update task" });
     }
-    if (existingTask) {
-      if (title === task.title) {
-        if (task._id.toString() === existingTask._id.toString()) {
-          titleTaken = false;
-        } else {
-          titleTaken = true;
-        }
+    if (
+      !(
+        typeof task !== "undefined" &&
+        task !== null &&
+        existingTask.title === task.title &&
+        task._id !== existingTask._id
+      )
+    ) {
+      return res.status(400).json({ messae: "title is taken" });
+    } else {
+      const updatedTask = await Task.findByIdAndUpdate(
+        taskId,
+        {
+          title,
+          description,
+          status: "pending",
+        },
+        { new: true },
+      );
+      if (updatedTask) {
+        return res.json({ updatedTask });
       } else {
-        titleTaken = false;
-      }
-      if (titleTaken) {
-        res.status(400).json({ message: "title is taken" });
-      } else if (existingTask.assignedBy.toString() === userId) {
-        const updatedTask = await Task.findByIdAndUpdate(
-          taskId,
-          {
-            title,
-            description,
-            updatedAt: new Date(),
-          },
-          {
-            new: true,
-          },
-        );
-        if (updatedTask) {
-          res.json({ updatedTask });
-        } else {
-          res.status(400).json({ message: "bad title or description" });
-        }
-      } else {
-        res.status(403).json({ message: "task dose not exists" });
+        return res.status(409).json({ message: "failed to update the task" });
       }
     }
   } catch (e) {

@@ -29,11 +29,7 @@
       >
       <a
         class="btn btn-sm btn-primary"
-        *ngIf="
-          isAdmin() &&
-          this.task.status !== 'approved' &&
-          this.task.status !== 'done'
-        "
+        *ngIf="isAdmin() && this.task.status !== 'approved'"
         (click)="navigateToUpdateTask()"
         >update task</a
       >
