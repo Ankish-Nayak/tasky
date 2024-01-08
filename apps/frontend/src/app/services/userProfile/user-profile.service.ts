@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2 } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
+import { Observable, ObservableLike } from 'rxjs';
 import { ProfileComponent } from '../../components/auth/profile/profile.component';
+import { UserDialogComponent } from '../../components/tasks/task/user-dialog/user-dialog.component';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProfileService {
+export class UserProfileService {
   bsModalRef: BsModalRef = {} as BsModalRef;
 
   constructor(private bsModalService: BsModalService) {}
@@ -21,7 +22,7 @@ export class ProfileService {
       lastname,
     };
 
-    this.bsModalRef = this.bsModalService.show(ProfileComponent, {
+    this.bsModalRef = this.bsModalService.show(UserDialogComponent, {
       initialState,
     });
 

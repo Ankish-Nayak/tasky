@@ -32,6 +32,9 @@ export class AuthService {
   get isLoggedInSource() {
     return this._isLoggedInSource.value;
   }
+  get userSource() {
+    return this._userSource;
+  }
   getIsLoggedIn() {
     return this.isLoggedIn;
   }

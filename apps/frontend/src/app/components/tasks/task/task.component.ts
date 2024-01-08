@@ -5,16 +5,16 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import humanReadableDate from '../../../helpers/HumanReadableDate';
 import { ITask } from '../../../models/task';
 import { AuthService } from '../../../services/auth/auth.service';
-import { ProfileService } from '../../../services/profile/profile.service';
 import { TasksService } from '../../../services/tasks/tasks.service';
+import { UserProfileService } from '../../../services/userProfile/user-profile.service';
 import { UsersService } from '../../../services/users/users.service';
-import { ProfileComponent } from '../../auth/profile/profile.component';
+import { UserDialogComponent } from './user-dialog/user-dialog.component';
 
 @Injectable()
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule, ProfileComponent],
+  imports: [CommonModule, UserDialogComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
 })
@@ -29,7 +29,7 @@ export class TaskComponent implements OnInit {
     private taskService: TasksService,
     private router: Router,
     private usersService: UsersService,
-    private profileService: ProfileService,
+    private userProfileService: UserProfileService,
     public bsModalRef: BsModalRef,
   ) {
     this.task = {} as ITask;
@@ -67,8 +67,6 @@ export class TaskComponent implements OnInit {
   }
   openProfile(event: MouseEvent) {
     event.preventDefault();
-    const user =
-      this.role === 'admin' ? this.task.assignedTo : this.task.assignedBy;
 
     const userId =
       this.role === 'admin'
@@ -77,7 +75,7 @@ export class TaskComponent implements OnInit {
     this.usersService.getUserById(userId).subscribe((res) => {
       console.log('opening profile', res);
 
-      this.profileService
+      this.userProfileService
         .openProfile(res.username, res.firstname, res.lastname)
         .subscribe(() => {
           console.log('res', res);

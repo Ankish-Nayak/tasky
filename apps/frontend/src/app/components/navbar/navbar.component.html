@@ -110,7 +110,7 @@
             Reset
           </a>
         </li>
-        <li>
+        <li *ngIf="isLanding()">
           <input
             class="form-control me-2"
             [(ngModel)]="title"
@@ -121,7 +121,6 @@
         </li>
       </ul>
 
-      <!-- <form class="d-flex" role="search"> -->
       <div *ngIf="isLanding()">
         <input
           class="form-control me-2"
@@ -134,26 +133,35 @@
           aria-label="Search"
           (ngModelChange)="printTitle($event)"
         />
-        <!-- <select *ngFor="let employee of employeeList"> -->
-        <!--   <option value="{{ employee._id }}">{{ employee.username }}</option> -->
-        <!-- </select> -->
-        <!-- <datalist id="suggestions" dropdown> -->
-        <!--   <option *ngFor="let employee of employeeList"> -->
-        <!--     {{ employee.username }} -->
-        <!--   </option> -->
-        <!-- </datalist> -->
-        <!-- <ul id="suggestions" class="dropdown-menu" *dropdownMenu> -->
-        <!--   <li *ngFor="let employee of employeeList" class="dropdown-item"> -->
-        <!--     {{ employee.username }} -->
-        <!--   </li> -->
-        <!-- </ul> -->
       </div>
 
-      <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
-      <!-- </form> -->
-      <button type="button" class="btn btn-outline-success" (click)="logout()">
-        Logout
-      </button>
+      <div style="margin-left: 10px; margin-right: 100px">
+        <div class="nav-item dropdown" dropdown *ngIf="isLanding()">
+          <a
+            class="nav-link dropdown-toggle cursor-pointer"
+            (click)="$event.preventDefault()"
+            role="button"
+            dropdownToggle
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="../../../assets/account_circle_FILL0_wght400_GRAD0_opsz24.svg"
+              dropdown
+            />
+          </a>
+
+          <ul class="dropdown-menu" *dropdownMenu>
+            <li *ngFor="let accountLink of accountLinks">
+              <a
+                class="dropdown-item cursor-pointer"
+                (click)="handleAccount($event, accountLink)"
+                >{{ accountLink }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </nav>

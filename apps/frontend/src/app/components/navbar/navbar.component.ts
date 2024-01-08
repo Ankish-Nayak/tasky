@@ -29,15 +29,15 @@ import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { SortsService } from '../../services/tasks/sorts/sorts.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { TitleSearchService } from '../../services/tasks/titles/title-search.service';
+import { EventManager } from '@angular/platform-browser';
+import { ProfileService } from '../../services/profile/profile.service';
+import { UsersService } from '../../services/users/users.service';
 
 // FIX: Search by with autosuggestions.
-// TODO: add modal of profile pic when clicked on card text link.
 // TODO: add search bar for searching employees while assingning task.
 // TODO: make admin to assign particular task to multiple employees.
 // TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
-// TODO: let admin to update task when status is done and push back it to pending state.
-// TODO: let search task by title.
-
+// TODO: make confirmation dialog while deleting task
 @Injectable()
 @Component({
   selector: 'app-navbar',
@@ -63,6 +63,12 @@ export class NavbarComponent implements OnInit {
   };
   title: string = '';
 
+  // user: {
+  //   userId: string;
+  //   role: "admin" | "employee";
+  //   firstname: string;
+  // }
+
   navLinks: INavLink[] = [];
   adminNavLinks: INavLink[] = adminNavLinks;
   employeeNavLinks: INavLink[] = employeeNavLinks;
@@ -83,8 +89,10 @@ export class NavbarComponent implements OnInit {
     },
   ];
   currentPath: string = '';
+  accountLinks: string[] = ['profile', 'updateProfile', 'logout'];
   private _selectedSortBy: ISort = 'recent';
   constructor(
+    private usersService: UsersService,
     private router: Router,
     private authService: AuthService,
     private rootService: RootService,
@@ -92,6 +100,7 @@ export class NavbarComponent implements OnInit {
     private employeeService: EmployeesService,
     private location: Location,
     private sortByService: SortsService,
+    private profileService: ProfileService,
     private tasksService: TasksService,
     private titleSearch: TitleSearchService,
   ) {}
@@ -148,6 +157,31 @@ export class NavbarComponent implements OnInit {
   navigateToCreateTask(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/createTask']);
+  }
+  handleAccount(event: MouseEvent, accountNavLink: string) {
+    event.preventDefault();
+    switch (accountNavLink) {
+      case 'profile': {
+        this.usersService
+          .getUserById(this.authService.userSource.value.userId)
+          .subscribe((res) => {
+            this.profileService.openProfile(
+              res.username,
+              res.firstname,
+              res.lastname,
+            );
+          });
+        console.log('open profile');
+        break;
+      }
+      case 'updateProfile': {
+        console.log('open profile');
+        break;
+      }
+      case 'logout': {
+        this.logout();
+      }
+    }
   }
   handleFilterBy(e: MouseEvent, filter: IFilter) {
     e.preventDefault();

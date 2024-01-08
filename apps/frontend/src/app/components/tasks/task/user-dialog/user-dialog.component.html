@@ -1,5 +1,7 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">Profile</h4>
+  <h4 class="modal-title pull-left">
+    {{ this.role !== "admin" ? "Admin" : "Employee" }} Profile
+  </h4>
   <button
     type="button"
     class="close pull-right"
@@ -16,6 +18,14 @@
 </div>
 <div class="modal-footer">
   <ng-container>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="assignTask()"
+      *ngIf="isAdmin()"
+    >
+      assign task
+    </button>
     <button type="button" class="btn btn-default btn-danger" (click)="close()">
       close
     </button>
