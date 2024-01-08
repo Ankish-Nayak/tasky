@@ -1,1 +1,31 @@
-<p>profile works!</p>
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Profile</h4>
+  <button
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="h4">firstname: {{ firstname }}</div>
+  <div class="h4">lastname: {{ lastname }}</div>
+  <div class="h4">username: {{ username }}</div>
+</div>
+<div class="modal-footer">
+  <ng-container>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="assignTask()"
+      *ngIf="isAdmin()"
+    >
+      assign task
+    </button>
+    <button type="button" class="btn btn-default btn-danger" (click)="close()">
+      close
+    </button>
+  </ng-container>
+</div>

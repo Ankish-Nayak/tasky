@@ -1,27 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import humanReadableDate from '../../../helpers/HumanReadableDate';
 import { ITask } from '../../../models/task';
 import { AuthService } from '../../../services/auth/auth.service';
+import { ProfileService } from '../../../services/profile/profile.service';
 import { TasksService } from '../../../services/tasks/tasks.service';
+import { UsersService } from '../../../services/users/users.service';
+import { ProfileComponent } from '../../auth/profile/profile.component';
 
 @Injectable()
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProfileComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
 })
 export class TaskComponent implements OnInit {
   @Input() task: ITask;
+  answer: string = '';
+  answers: string[] = [];
   role: 'admin' | 'employee' = 'admin';
   message: 'start' | 'done' | 'approve' | 'approved' | 'progress' = 'approved';
   constructor(
     private authService: AuthService,
     private taskService: TasksService,
     private router: Router,
+    private usersService: UsersService,
+    private profileService: ProfileService,
+    public bsModalRef: BsModalRef,
   ) {
     this.task = {} as ITask;
   }
@@ -47,6 +56,32 @@ export class TaskComponent implements OnInit {
           this.message = 'done';
         }
       }
+    });
+  }
+
+  respond(event: MouseEvent, answer: string) {
+    console.log('hit');
+    event.preventDefault();
+    this.answer = answer;
+    this.bsModalRef.hide();
+  }
+  openProfile(event: MouseEvent) {
+    event.preventDefault();
+    const user =
+      this.role === 'admin' ? this.task.assignedTo : this.task.assignedBy;
+
+    const userId =
+      this.role === 'admin'
+        ? this.task.assignedTo._id
+        : this.task.assignedBy._id;
+    this.usersService.getUserById(userId).subscribe((res) => {
+      console.log('opening profile', res);
+
+      this.profileService
+        .openProfile(res.username, res.firstname, res.lastname)
+        .subscribe(() => {
+          console.log('res', res);
+        });
     });
   }
   isUpdatedAt() {

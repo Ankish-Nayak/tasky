@@ -35,6 +35,7 @@ import { TasksService } from '../../services/tasks/tasks.service';
 // TODO: make admin to assign particular task to multiple employees.
 // TODO: add profile dropdown to update multiple features suchas logout updateProfile show profile
 // TODO: let admin to update task when status is done and push back it to pending state.
+// TODO: let search task by title.
 
 @Injectable()
 @Component({

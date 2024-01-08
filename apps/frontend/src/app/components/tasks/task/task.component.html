@@ -5,7 +5,12 @@
     <p class="card-text">
       {{ this.role === "admin" ? "AssignedTo: " : "AssignedBy: " }}
       <!---->
-      <a href="#" class="card-link">{{ getCardText() }}</a>
+      <a
+        href="javascript:void();"
+        class="card-link"
+        (click)="openProfile($event)"
+        >{{ getCardText() }}</a
+      >
     </p>
     <p class="card-text">assignedAt: {{ task.createdAt }}</p>
 
@@ -78,3 +83,5 @@
     </div>
   </div>
 </div>
+
+<!-- <app-profile></app-profile> -->
