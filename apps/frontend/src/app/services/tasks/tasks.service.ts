@@ -60,11 +60,15 @@ export class TasksService implements OnInit {
     );
   }
 
-  getTasks(taskStatus: IStatus | 'all', sorts?: ISort) {
+  getTasks(taskStatus: IStatus | 'all', sorts?: ISort, title?: string) {
+    title = typeof title === 'undefined' ? '' : title;
     this.http
-      .get<{ tasks: ITask[] }>(`${this.baseUrl}/?filterBy=${taskStatus}`, {
-        withCredentials: true,
-      })
+      .get<{ tasks: ITask[] }>(
+        `${this.baseUrl}/?filterBy=${taskStatus}&title=^${title}`,
+        {
+          withCredentials: true,
+        },
+      )
       .subscribe((res) => {
         console.log(res);
         if (typeof sorts === 'undefined' || sorts === 'recent') {

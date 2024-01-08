@@ -7,6 +7,7 @@ import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { SortsService } from '../../services/tasks/sorts/sorts.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { TaskComponent } from './task/task.component';
+import { TitleSearchService } from '../../services/tasks/titles/title-search.service';
 
 export const priority = () => {};
 const statusOrder = ['pending', 'progress', 'done', 'approved'];
@@ -27,6 +28,7 @@ export class TasksComponent implements OnInit {
     private filtersService: FiltersService,
     private modalService: BsModalService,
     private sortBy: SortsService,
+    private titleSearch: TitleSearchService,
   ) {}
   ngOnInit(): void {
     this.tasksService.getTasks('all');
@@ -37,6 +39,9 @@ export class TasksComponent implements OnInit {
     this.tasks.sort(
       (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),
     );
+    this.titleSearch.titleSearchMessage$.subscribe((res) => {
+      this.tasksService.getTasks('all', this.sortBy.filter, res);
+    });
     this.filtersService.filterMessage$.subscribe((res) => {
       if (res === 'all' || res === null) {
         this.tasksService.getTasks('all', this.sortBy.filter);

@@ -233,12 +233,15 @@ export const getTasksByJwtRoleFilterBy = async (
   const role = req.headers.role as string;
   const userId = req.headers.userId as string;
   const filterBy = req.query.filterBy as string;
+  const title = req.query.title;
+  console.log("title", title);
   console.log("filterBy", filterBy);
   try {
     if (role === "admin") {
       const tasks = await Task.find({
         assignedBy: userId,
         status: filterBy,
+        title: { $regex: title, $options: "i" },
       })
         .populate({
           path: "assignedTo",
@@ -253,6 +256,7 @@ export const getTasksByJwtRoleFilterBy = async (
       const tasks = await Task.find({
         assignedTo: userId,
         status: filterBy,
+        title: { $regex: title, $options: "i" },
       })
         .populate({
           path: "assignedTo",
@@ -325,11 +329,15 @@ export const getTasksByJwtRole = async (
 ) => {
   const role = req.headers.role as string;
   const userId = req.headers.userId as string;
+  const title = req.query.title || "";
 
+  console.log("title", title);
   try {
     if (role === "admin") {
       const tasks = await Task.find({
         assignedBy: userId,
+
+        title: { $regex: title, $options: "i" },
       })
         .populate({
           path: "assignedTo",
@@ -343,6 +351,8 @@ export const getTasksByJwtRole = async (
     } else if (role === "employee") {
       const tasks = await Task.find({
         assignedTo: userId,
+
+        title: { $regex: title, $options: "i" },
       })
         .populate({
           path: "assignedTo",

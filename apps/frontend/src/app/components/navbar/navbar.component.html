@@ -1,10 +1,11 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" *ngIf="isLoggedIn.value">
-  <div class="container-fluid d-flex justify-content-between">
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+  >
     <a class="navbar-brand" href="" (click)="navigateToHome($event)">
       <p class="h1 cursor-pointer">Tasky</p>
     </a>
 
-    <!-- <p class="h1 cursor-pointer">Tasky</p> -->
     <button
       class="navbar-toggler"
       type="button"
@@ -31,7 +32,9 @@
       id="navbarSupportedContent"
       *ngIf="isLoggedIn.value"
     >
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul
+        class="navbar-nav me-auto mb-2 mb-lg-0 flex justify-content-center align-items-center"
+      >
         <li class="nav-item" *ngFor="let navLink of navLinks">
           <a
             class="nav-link {{ navLink.isActive ? 'active' : '' }}"
@@ -40,26 +43,6 @@
             >{{ navLink.name }}</a
           >
         </li>
-        <!-- <li class="nav-item" *ngIf="isAdmin()"> -->
-        <!--   <a -->
-        <!--     class="nav-link active" -->
-        <!--     href="/createTask" -->
-        <!--     (click)="navigateToCreateTask($event)" -->
-        <!--     tooltip="Assign task to employee" -->
-        <!--     >CreateTask</a -->
-        <!--   > -->
-        <!-- </li> -->
-        <!-- <li class="nav-item" *ngIf="isAdmin()"> -->
-        <!--   <a -->
-        <!--     class="nav-link cursor-pointer" -->
-        <!--     (click)="navigateToHome($event)" -->
-        <!--     tooltip="Assign task to employee" -->
-        <!--     >Tasks</a -->
-        <!--   > -->
-        <!-- </li> -->
-        <!-- <li class="nav-item"> -->
-        <!--   <a class="nav-link">Link</a> -->
-        <!-- </li> -->
 
         <li class="nav-item dropdown" dropdown *ngIf="isLanding()">
           <a
@@ -127,9 +110,15 @@
             Reset
           </a>
         </li>
-        <!-- <li class="nav-item"> -->
-        <!--   <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
-        <!-- </li> -->
+        <li>
+          <input
+            class="form-control me-2"
+            [(ngModel)]="title"
+            placeholder="Search Task by title"
+            aria-label="Search"
+            (ngModelChange)="searchTaskByTitle($event)"
+          />
+        </li>
       </ul>
 
       <!-- <form class="d-flex" role="search"> -->

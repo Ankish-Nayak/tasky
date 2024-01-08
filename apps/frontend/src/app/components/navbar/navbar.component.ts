@@ -28,6 +28,7 @@ import { EmployeesService } from '../../services/employees/employees.service';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { SortsService } from '../../services/tasks/sorts/sorts.service';
 import { TasksService } from '../../services/tasks/tasks.service';
+import { TitleSearchService } from '../../services/tasks/titles/title-search.service';
 
 // FIX: Search by with autosuggestions.
 // TODO: add modal of profile pic when clicked on card text link.
@@ -60,6 +61,7 @@ export class NavbarComponent implements OnInit {
     value: false,
     isLoading: true,
   };
+  title: string = '';
 
   navLinks: INavLink[] = [];
   adminNavLinks: INavLink[] = adminNavLinks;
@@ -90,8 +92,12 @@ export class NavbarComponent implements OnInit {
     private employeeService: EmployeesService,
     private location: Location,
     private sortByService: SortsService,
-    // private tasks: TasksService,
+    private tasksService: TasksService,
+    private titleSearch: TitleSearchService,
   ) {}
+  searchTaskByTitle(title: string) {
+    this.titleSearch.updateTitleSearch(title);
+  }
   printTitle(title: string) {
     console.log(title);
     if (title.length === 0) {

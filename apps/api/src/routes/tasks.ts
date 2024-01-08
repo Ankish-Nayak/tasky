@@ -8,6 +8,8 @@ router.post("/", authenticateJWT, taskController.createTask);
 // give based on role
 // if employee then gives task assigned to him
 // if admin then gives task assigned by him
+
+//FIXME: refactor this.
 router.get(
   "/",
   authenticateJWT,
@@ -16,11 +18,9 @@ router.get(
     const assignedBy = req.query.assignedBy;
     const filterBy = req.query.filterBy as string;
     const sortBy = req.query.sortBy as string;
-    console.log(filterBy);
     let status: string | null = null;
     let sort: string | null = null;
     if (["pending", "done", "approved", "progress"].includes(filterBy)) {
-      console.log("dondone");
       status = filterBy;
     }
     if (["recent", "oldest"].includes(sortBy)) {
