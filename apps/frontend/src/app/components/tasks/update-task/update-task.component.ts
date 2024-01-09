@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IEmployee } from '../../models/employee';
-import { EmployeesService } from '../../services/employees/employees.service';
-import { TasksService } from '../../services/tasks/tasks.service';
-import { ITask } from '../../models/task';
+import { IEmployee } from '../../../models/employee';
+import { ITask } from '../../../models/task';
+import { EmployeesService } from '../../../services/employees/employees.service';
+import { TasksService } from '../../../services/tasks/tasks.service';
+import { DeleteTaskService } from './service/delete-task.service';
 
 @Component({
   selector: 'app-update-task',
@@ -30,6 +31,7 @@ export class UpdateTaskComponent {
     private employeesService: EmployeesService,
     private tasksService: TasksService,
     private route: ActivatedRoute,
+    private deleteDialog: DeleteTaskService,
   ) {
     this.task = {} as ITask;
   }
@@ -80,9 +82,14 @@ export class UpdateTaskComponent {
     }
   }
   deleteTask() {
-    this.tasksService.deleteTask(this.taskId).subscribe((res) => {
-      console.log(res);
-      this.router.navigate(['']);
+    this.deleteDialog.openDialog(false).subscribe((res) => {
+      if (res) {
+        this.tasksService.deleteTask(this.taskId).subscribe((res) => {
+          console.log(res);
+          this.router.navigate(['']);
+        });
+      } else {
+      }
     });
   }
   resetTask() {

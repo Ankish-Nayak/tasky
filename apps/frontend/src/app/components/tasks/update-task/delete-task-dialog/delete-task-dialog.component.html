@@ -4,7 +4,7 @@
     type="button"
     class="close pull-right"
     aria-label="Close"
-    (click)="bsModalRef.hide()"
+    (click)="this.bsModalRef.hide()"
   >
     <span aria-hidden="true">&times;</span>
   </button>
@@ -14,8 +14,13 @@
 </div>
 <div class="modal-footer">
   <ng-container>
-    <button type="button" class="btn btn-default btn-danger" (click)="delete()">
-      close
-    </button>
+    <div class="contain-fluid d-flex flex-row-reverse">
+      <div class="button-container">
+        <button class="btn btn-danger btn-sm" (click)="delete()">yes</button>
+      </div>
+      <div class="button-container">
+        <button class="btn btn-danger btn-sm" (click)="cancel()">no</button>
+      </div>
+    </div>
   </ng-container>
 </div>
