@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+model Employee {
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  firstname    String
+  lastname     String
+  assignedTask Task[]
+}
+
+model Admin {
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  firstname    String
+  lastname     String
+  assignedTask Task[]
+}
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  assignedTo   Employee @relation(fields: [assignedToId], references: [id])
+  assignedBy   Admin    @relation(fields: [assignedById], references: [id])
+  assignedById Int
+  assignedToId Int
+}
