@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">Profile</h4>
+  <h4 class="modal-firstname pull-left">Update Profile</h4>
   <button
     type="button"
     class="close pull-right"
@@ -10,14 +10,80 @@
   </button>
 </div>
 <div class="modal-body">
-  <div class="h4">firstname: {{ firstname }}</div>
-  <div class="h4">lastname: {{ lastname }}</div>
-  <div class="h4">username: {{ username }}</div>
+  <form [formGroup]="updateProfileForm" (submit)="updateProfile()">
+    <div class="mb-3">
+      <label for="username" class="form-label">username</label>
+      <input
+        type="text"
+        autofocus
+        class="form-control"
+        formControlName="username"
+        placeholder="Enter username"
+        id="username"
+        [ngModel]="username"
+        aria-describedby="usernameHelp"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="firstname" class="form-label">firstname</label>
+      <input
+        type="text"
+        autofocus
+        class="form-control"
+        formControlName="firstname"
+        placeholder="Enter firstname"
+        id="firstname"
+        [ngModel]="firstname"
+        aria-describedby="firstnameHelp"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="lastname" class="form-label">lastname</label>
+      <input
+        type="text"
+        autofocus
+        class="form-control"
+        formControlName="lastname"
+        placeholder="Enter firstname"
+        id="lastname"
+        [ngModel]="lastname"
+        aria-describedby="lastnameHelp"
+      />
+    </div>
+  </form>
+  <!-- <div class="d-flex container-fluid justify-content-start"> -->
+  <div class="container-fluid d-flex flex-row-reverse">
+    <div class="button-container">
+      <button
+        type="button"
+        class="btn btn-default btn-secondary btn-sm p-10"
+        (click)="updateProfile()"
+      >
+        update
+      </button>
+    </div>
+    <div class="button-container">
+      <button
+        type="button"
+        class="btn btn-default btn-primary btn-sm"
+        (click)="resetProfile()"
+      >
+        reset
+      </button>
+    </div>
+  </div>
 </div>
+<!-- </div> -->
 <div class="modal-footer">
   <ng-container>
-    <button type="button" class="btn btn-default btn-danger" (click)="close()">
-      close
-    </button>
+    <div class="d-flex flex-row-reverse container-fluid">
+      <button
+        type="button"
+        class="btn btn-default btn-danger"
+        (click)="close()"
+      >
+        close
+      </button>
+    </div>
   </ng-container>
 </div>

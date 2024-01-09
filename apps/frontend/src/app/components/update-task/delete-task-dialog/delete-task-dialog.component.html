@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Confirmation</h4>
+  <button
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="h3">Do you want to delete task?</div>
+</div>
+<div class="modal-footer">
+  <ng-container>
+    <button type="button" class="btn btn-default btn-danger" (click)="delete()">
+      close
+    </button>
+  </ng-container>
+</div>

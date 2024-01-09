@@ -6,7 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -16,22 +16,18 @@ import { RootService } from '../../services/root/root.service';
 
 import { adminNavLinks, employeeNavLinks } from '../../helpers/navLinks';
 
-import {
-  adminAllowedRoutes,
-  employeeAllowedRoutes,
-} from '../../helpers/allowedRoutes';
 import { capitalizeFirstLetter } from '../../helpers/captitalize';
 import { IEmployee } from '../../models/employee';
 import { INavLink } from '../../models/navLink';
 import { IFilter, ISort } from '../../models/task';
 import { EmployeesService } from '../../services/employees/employees.service';
+import { ProfileService } from '../../services/profile/profile.service';
 import { FiltersService } from '../../services/tasks/filters/filters.service';
 import { SortsService } from '../../services/tasks/sorts/sorts.service';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { TitleSearchService } from '../../services/tasks/titles/title-search.service';
-import { EventManager } from '@angular/platform-browser';
-import { ProfileService } from '../../services/profile/profile.service';
 import { UsersService } from '../../services/users/users.service';
+import { UpdateProfileService } from './service/update-profile.service';
 
 // FIX: Search by with autosuggestions.
 // TODO: add search bar for searching employees while assingning task.
@@ -103,6 +99,7 @@ export class NavbarComponent implements OnInit {
     private profileService: ProfileService,
     private tasksService: TasksService,
     private titleSearch: TitleSearchService,
+    private updateProfileService: UpdateProfileService,
   ) {}
   searchTaskByTitle(title: string) {
     this.titleSearch.updateTitleSearch(title);
@@ -176,6 +173,15 @@ export class NavbarComponent implements OnInit {
       }
       case 'updateProfile': {
         console.log('open profile');
+        this.usersService
+          .getUserById(this.authService.userSource.value.userId)
+          .subscribe((res) => {
+            this.updateProfileService.openUpdateProfile(
+              res.username,
+              res.firstname,
+              res.lastname,
+            );
+          });
         break;
       }
       case 'logout': {

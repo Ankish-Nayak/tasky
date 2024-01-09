@@ -11,6 +11,11 @@ export const signupTypes = z.object({
   role: z.enum(["employee", "admin"]),
 });
 
+export const updateProfileTypes = z.object({
+  firstname: z.string(),
+  lastname: z.string(),
+  username: z.string().email(),
+});
 export const createTaskTypes = z.object({
   title: z.string().min(4),
   description: z.string().min(4),
@@ -29,3 +34,4 @@ export const isTittleTakenTypes = z.object({
 export type loginParams = z.infer<typeof loginTypes>;
 export type signupParams = z.infer<typeof signupTypes>;
 export type isTittleTakenParams = z.infer<typeof isTittleTakenTypes>;
+export type updateProfileParams = z.infer<typeof updateProfileTypes>;

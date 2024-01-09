@@ -20,6 +20,8 @@ router.post("/signup", commonController.signup);
 
 router.get("/", authenticateJWT, commonController.getUsers);
 
+router.put("/", authenticateJWT, commonController.updateProfile);
+
 router.get(
   "/username/:regex",
   authenticateJWT,

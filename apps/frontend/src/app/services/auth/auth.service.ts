@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { loginParams, signupParams } from 'types';
+import { loginParams, signupParams, updateProfileParams } from 'types';
 import { environment } from '../../../environments/environment.dev';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { IUser } from '../../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -167,6 +168,18 @@ export class AuthService {
           this._isLoggedInSource.next(false);
         },
       );
+  }
+
+  updateProfile(username: string, firstname: string, lastname: string) {
+    const data: updateProfileParams = {
+      username,
+      firstname,
+      lastname,
+    };
+    //FIXME: do valid zod validation.
+    return this.http.put<{ user: IUser }>(`${this.baseUrl}/`, data, {
+      withCredentials: true,
+    });
   }
 
   async getProfile() {

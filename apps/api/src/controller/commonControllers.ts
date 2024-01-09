@@ -2,10 +2,58 @@ import Cookies from "cookies";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "models";
-import { loginTypes, signupTypes } from "types";
+import { loginTypes, signupTypes, updateProfileTypes } from "types";
 import { secret } from "..";
 import { refreshLoginSession } from "../helpers/removeExpiryToken";
 import { transformUsers } from "../helpers/transformUser";
+
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.headers.userId as string;
+  const role = req.headers.role as string;
+  try {
+    const existingUser = await User.findById(userId);
+    if (existingUser) {
+      const parsedInputs = updateProfileTypes.parse(req.body);
+      const { firstname, username, lastname } = parsedInputs;
+      const user = await User.findOne({ username });
+      if (
+        user !== null &&
+        user._id.toString() !== existingUser._id.toString()
+      ) {
+        return res.status(400).json({ message: "email is taken" });
+      }
+      const updateUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          firstname,
+          lastname,
+          username,
+        },
+        {
+          new: true,
+        },
+      );
+      if (updateUser) {
+        const newUser = {
+          firstname: updateUser.firstname,
+          lastname: updateUser.lastname,
+          username: updateUser.username,
+        };
+        res.json({ user: newUser });
+      } else {
+        res.status(403).json({ message: "failed to update user" });
+      }
+    } else {
+      res.status(404).json({ message: "user dose not exists" });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
 
 export const login = async (
   req: Request,
